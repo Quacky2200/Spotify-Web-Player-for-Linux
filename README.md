@@ -1,3 +1,4 @@
+![Spotify - Logged In](https://cloud.githubusercontent.com/assets/4623599/14404283/bd6f7d9c-fe69-11e5-9588-628248c25dfc.png)
 # Spotify Web Player for Linux
 A Node.JS application built with electron to turn Spotify's Web Player into a local player for a stable Spotify Player for Linux replacement
 
@@ -15,14 +16,16 @@ A Node.JS application built with electron to turn Spotify's Web Player into a lo
 * Better/Custom theming?
 * Smaller/Better login screen
 * Off-line playback support
+* Media keys
 
 
 ## How to install
 
-(Debian file coming soon)
+Check out the [Releases](https://github.com/Quacky2200/Spotify-Web-Player-for-Linux/releases) page.
 
 ## Requirements
-libappindicator
-**(Optional)** Node.JS
-Electron 0.37.0 binary found here: https://github.com/electron/electron/releases/download/v0.37.0/chromedriver-v2.15-linux-ia32.zip 
+libappindicator1, wget, unzip
 
+#### For development:
+**(Optional)** Node.JS
+Electron 0.37.0 found here: https://github.com/electron/electron/releases/
