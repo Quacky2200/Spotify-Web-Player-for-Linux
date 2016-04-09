@@ -9,6 +9,7 @@ A Node.JS application built with electron to turn Spotify's Web Player into a lo
 * Unity Right-Click menu integration
 * D-Bus mpris control/update info
 * Close to tray
+* Non-intrusive Spotify advertisements (except Spotify playback advertisements)
 
 ## Future updates I hope to add
 * Unity Sound Indicator
