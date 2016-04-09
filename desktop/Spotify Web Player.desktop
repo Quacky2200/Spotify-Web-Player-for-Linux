@@ -1,0 +1,34 @@
+[Desktop Entry]
+Name=Spotify Web Player
+GenericName=Music Player
+X-GNOME-FullName=Spotify Web Player for Linux
+Comment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.
+Keywords=Audio;Song;MP3;Podcast;Playlist;Radio;
+Exec=/usr/bin/spotifywebplayer
+Terminal=false
+Type=Application
+Icon=/usr/bin/spotifywebplayer/spotify-large-transparent.png
+Categories=GNOME;GTK;AudioVideo;Audio;Player;
+StartupNotify=true
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=Spotify Web Player for Linux
+X-GNOME-Bugzilla-Component=general
+X-GNOME-UsesNotifications=true
+Actions=Play;Pause;Next;Previous;
+X-Ubuntu-Gettext-Domain=rhythmbox
+
+[Desktop Action Play]
+Name=Play
+Exec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+
+[Desktop Action Pause]
+Name=Pause
+Exec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+
+[Desktop Action Next]
+Name=Next
+Exec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+
+[Desktop Action Previous]
+Name=Previous
+Exec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
