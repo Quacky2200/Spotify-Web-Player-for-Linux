@@ -41,7 +41,7 @@ function createWindow () {
   });
   mainWindow.loadURL("https://play.spotify.com");
   // Emitted when the window is closed.
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
   mainWindow.onbeforeunload = function(e) {
   	console.log('Spotify has been moved to the background');
   	return false;
@@ -75,6 +75,7 @@ var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) 
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
     mainWindow.focus();
   }
 });
