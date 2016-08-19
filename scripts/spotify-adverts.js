@@ -11,7 +11,7 @@ var CSS = `
 :not(#advert) > #hpto-container{display:none;}
 #now-playing-widgets{display:none !important;}
 .etched-top::before{background-color:#343434 !important;}
-html, body{width: 100%;height:100%;border:0;margin:0;padding:0;}
+html, body{width: 100%;height:100%;border:0 !important;margin:0;padding:0;}
 .ads-leaderboard-container{display:none !important;}
 #window_advert{position: fixed; display:none;height:100%;width:100%;background:rgba(0,0,0,0.75);z-index:10000}
 #window_advert_container{display:table;position:relative;width:100%;height:100%}
@@ -28,6 +28,8 @@ function injectIframe(obj){
     var iframe = jQuery(obj);
     //Append it to the iframe
     jQuery('body', jQuery(iframe).contents()).append("<style>" + CSS + "<style>");
+    //Always make sure spotify player controls are covering advert area
+	//$('html, body', $('#app-player').contents()).css({height: '100%', 'border-bottom': 'none'});
 }
 function showWindowAdvert(){
 	if(jQuery('#window_advert').length > 0) jQuery('#window_advert').remove();
@@ -78,7 +80,7 @@ window.addEventListener("message", function(event){
         //console.log("injected advert redirect");
         var newWindowAdvert = $("#hpto-container", jQuery('.root iframe').contents());
         if(currentWindowAdvert == null && newWindowAdvert.length > 0) currentWindowAdvert = newWindowAdvert.eq(0).clone();
-        injectIframe(jQuery("div[id*='section-'] iframe[id*='app-spotify:']"));
+        injectIframe(jQuery("div[id*='section-'] iframe[id*='app-spotify:'], #app-player"));
     } else {
     	//console.log(event.data);
     }

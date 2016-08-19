@@ -1,17 +1,17 @@
 #!/bin/sh
 _DIR="$(dirname $(readlink -f $0))"
 
-_ELECTRON="https://github.com/electron/electron/releases/download/v0.37.0/electron-v0.37.0-linux-ia32.zip"
+_ELECTRON="https://github.com/electron/electron/releases/download/v1.0.0/electron-v1.0.0-linux-ia32.zip"
 _APP="spotifywebplayer"
 _NAME="Spotify Web Player"
 _EXEC="/usr/bin/$_APP/lib/electron/electron ."
 _PATH="/usr/bin/$_APP"
 _ICON="spotify-web-player"
-_VERSION="0.5.9"
+_VERSION="0.8.19"
 _AUTHOR="Matthew James"
 _EMAIL="Quacky2200@hotmail.com"
 _DESCRIPTION="Music for every moment. Spotify is a digital music service that gives you access to millions of songs."
-_DEPS="libappindicator, wget, unzip"
+_DEPS="libappindicator, libnotify4, notify-osd, wget, unzip"
 _DESKTOP_EXTRAS="
 Actions=Play;Pause;Next;Previous;
 [Desktop Action Play]
