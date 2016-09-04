@@ -1,7 +1,7 @@
 {
   "name": "spotifywebplayer",
   "productName": "Spotify Web Player",
-  "version": "0.5.9",
+  "version": "0.9.4",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
@@ -12,8 +12,8 @@
     "url": "git+https://github.com/electron/electron-quick-start.git"
   },
   "keywords": [
-  	"play",
-  	"music"
+    "play",
+    "music"
   ],
   "author": "Quacky2200",
   "license": "CC0-1.0",
@@ -22,14 +22,13 @@
   },
   "homepage": "https://github.com/Quacky2200/spotify-web-player-for-linux",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0",
-    "electron-rebuild": "^1.1.3"
+    "electron-prebuilt": "1.3.4"
   },
   "dependencies": {
-    "dbus": "^0.2.17",
+    "auto-launch": "^4.0.0",
     "electron-cookies": "^1.1.0",
-    "electron-prebuilt": "^0.36.12",
+    "freedesktop-notifications": "^1.2.2",
     "mpris-service": "^1.1.1",
-    "userhome": "^1.0.0"
+    "request": "^2.74.0"
   }
 }

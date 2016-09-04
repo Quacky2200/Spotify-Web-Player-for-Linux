@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family: 'Open Sans', sans-serif, arial; overflow: scroll;overflow-x: hidden;}
+a{text-decoration: none;}
+p{margin: 0px;}
+h1,h2{font-weight: 300;margin:0;}
+td{padding: 10px 0;}
+td span{max-width: 50%;}
+td:last-child{text-align:right;}
+tr.indent td:first-child{padding: 5px 20px;}
+tr.indent td h2{font-weight:600;font-size:1em;}
+div{padding: 0 20px;text-align: justify}
+div > p{margin: 10px;}
+label.toggle{
+	width: 50px;
+    background: white;
+    display: inline-block;
+    padding: 0;
+    border-radius: 20px;
+    vertical-align: middle;
+    position: relative;
+    box-shadow: inset 0 0 2px gray;
+    transition: all 250ms;
+}
+label.toggle.disabled{
+	background: #c1c1c1;
+    opacity: 0.5;
+}
+label.toggle.disabled input[type='checkbox']:checked{
+	background: gray;
+}
+label.toggle input[type='checkbox']{
+    -webkit-appearance: none;
+    display: block;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    box-shadow: inset 0 0 2px #040404;
+    transition: all 250ms;
+    background: gray;
+    margin: 4px;
+}
+label.toggle input[type='checkbox']:focus{
+	outline:0;
+}
+select{
+	background: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 1em;
+    min-width: 100px;
+    transition: all 250ms;
+}
+select:focus{
+	outline:0;
+}
+label.toggle input[type='checkbox']:checked{
+	margin-left: calc(100% - 24px);
+	background: #84bd00;
+}
+</style>
+</head>
+<body class='preferences'>
+	<h1 align='center' style='margin: 20px 0 0'>App Preferences</h1>
+	<div id='options'>
+		<form>
+			<table>
+				<tr><td><h2>Notifications</h2><span></span></td><td></td></tr>
+				<tr class='indent'>
+					<td>
+						<h2>Track Changes</h2>
+						<span>Show a notification when the track changes to another</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='Notifications.ShowTrackChange'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>On Playback</h2>
+						<span>Show a notification when a track starts playback</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='Notifications.ShowPlaybackPlaying'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>On Pause</h2>
+						<span>Show a notification when the track is paused</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='Notifications.ShowPlaybackPaused'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>On Stop</h2>
+						<span>Show a notification when the queue is finished</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='Notifications.ShowPlaybackStopped'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Theme</h2>
+						<span>Are you from the dark side and would like to see the light?</span>
+					</td>
+					<td>
+						<label>
+							<select name='Theme'>
+								<option value='dark'>Dark</option>
+								<option value='light'>Light</option>
+							</select>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Show Tray Icon</h2>
+						<span>Should Spotify Web Player show a tray icon?</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='ShowTray'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Close To Tray</h2>
+						<span>Allows you to keep the window hidden whilst playing music and use the tray menu or application menu to quit.<br><i>The window will minimise if the tray icon is disabled.</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='CloseToTray'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Start on Login</h2>
+						<span>Love Spotify Web Player? Get it whenever your computer logs in!</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='StartOnLogin'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Start hidden</h2>
+						<span>Sometimes waiting is ok, Spotify Web Player is never gonna give you up</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='StartHidden'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Navbar</h2>
+						<span></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type="checkbox" name="NavBar.Itself">
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show Browse Icon</h2>
+						<span>If you like to endlessly scroll your Facebook feed, this may be a good option to turn off...</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.Browse'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show 'Your Music' Icon</h2>
+						<span>If you like to experience a variety of music and never listen to your own, this may be a wasted icon</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.YourMusic'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show Radio Icon</h2>
+						<span>Never use it, get rid of it..eh?</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.Radio'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show Follow Icon</h2>
+						<span>Not everyone is social - I understand</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.Follow'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show User Icon</h2>
+						<span>When you feel ugly, simply turn this off</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.User'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show Settings Icon</h2>
+						<span>I cannot think of a reason this should be removed but never the less, the option is there</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.Settings'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Show DevTools</h2>
+						<span>Have a look under the hood and see the horror<br><i>DevTools will open when the window is re-opened</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='ShowDevTools'>
+						</label>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>

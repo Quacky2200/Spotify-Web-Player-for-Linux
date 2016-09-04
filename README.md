@@ -15,7 +15,7 @@ A Node.JS application built with electron to turn Spotify's Web Player into a lo
 
 Check out the [Releases](https://github.com/Quacky2200/Spotify-Web-Player-for-Linux/releases) page.
 
-#### If you cannot find a release, don't worry! It's easy to use with a few simple commands...
+#### If you cannot find a release, don't worry! It's easy to use with a few simple *linux only* commands...
 ##### Arch and other Linux users will need to make sure libappindicator-1 and libnotify4 (or alternative desktop environment packages) are installed that Electron will be able to use!
 Debian/Ubuntu/Linux Mint
 ```
@@ -29,30 +29,16 @@ Extract Spotify Web Player specifically like so:
 ```
 sudo mkdir -p /usr/bin/spotifywebplayer/lib/electron && sudo unzip master.zip /usr/bin/spotifywebplayer
 ```
-Download Electron 1.0.0 and unzip it to the right directory
+We must download a few prerequisites
 ```
-wget https://github.com/electron/electron/releases/download/v1.0.0/electron-v1.0.0-linux-ia32.zip && sudo unzip electron-v1.0.0-linux-ia32.zip /usr/bin/spotifywebplayer/lib/electron
+cd /usr/bin/spotifywebplayer && . ./get_prerequisites.sh
 ```
 Create Application Icon & Application Launcher
 ```
-sudo cp /usr/bin/spotifywebplayer/spotify-large-transparent.png /usr/share/pixmaps/spotify-web-player.png && sudo echo "[Desktop Entry]\nVersion=0.8.19\nName=Spotify Web Player\nComment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.\nExec=/usr/bin/spotifywebplayer/lib/electron/electron .\nPath=/usr/bin/spotifywebplayer\nIcon=spotify-web-player\nTerminal=false\nType=Application\nCategories=GNOME;GTK;AudioVideo;Audio;Player;\n" > /usr/share/applications/spotifywebplayer.desktop && sudo chmod +x /usr/share/applications/spotifywebplayer.desktop
+sudo cp /usr/bin/spotifywebplayer/spotify-large-transparent.png /usr/share/pixmaps/spotify-web-player.png && sudo echo "[Desktop Entry]\nVersion=0.9.4\nName=Spotify Web Player\nComment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.\nExec=bash /usr/bin/spotifywebplayer/spotifywebplayer\nPath=/usr/bin/spotifywebplayer\nIcon=spotify-web-player\nCategories=GNOME;GTK;AudioVideo;Audio;Player;\nActions=PlayPause;Next;Previous;\nType=Application\nTerminal=false\n[Desktop Action PlayPause]\nName=Play/Pause\nExec=dbus-send --print-reply --reply-timeout=2500 --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause\n[Desktop Action Next]\nName=Next\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next\n[Desktop Action Previous]\nName=Previous\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 ```
 
 ## Requirements
 libappindicator1, libnotify4, wget, unzip
 
-#### For development:
-**(Optional)** Node.JS
-Run with Node.JS using this command
-```
-node run.js
-```
-Run with Electron using this command
-```
-. /usr/bin/spotifywebplayer/spotifywebplayer
-```
-or
-```
-. /path/to/project/directory/spotifywebplayer
-```
-Electron v1.0.0 can be found here: https://github.com/electron/electron/releases/v1.0.0
+Electron v1.3.4 can be found here: https://github.com/electron/electron/releases/v1.3.4

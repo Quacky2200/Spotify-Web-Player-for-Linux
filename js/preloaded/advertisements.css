@@ -1,0 +1,16 @@
+#notification-area{display:none;}
+#cookie-compliance{display:none !important;}
+#header #appName{height: 0;overflow: hidden;display:none !important;}
+:not(#advert) > #hpto-container{display:none;}
+#now-playing-widgets{display:none !important;}
+.etched-top::before{background-color:#343434 !important;}
+html, body{width: 100%;height:100%;border:0 !important;margin:0;padding:0;}
+.ads-leaderboard-container{display:none !important;}
+#window_advert{position: fixed; display:none;height:100%;width:100%;background:rgba(0,0,0,0.75);z-index:10000}
+#window_advert_container{display:table;position:relative;width:100%;height:100%}
+#advert_container{display:table-cell;vertical-align:middle;text-align:center}
+#advert{position:relative;text-align:right;display:inline-block;border-radius:10px;overflow:hidden;width:1200px;height:270px;min-width: 800px;max-width: 75%;}
+#advert a, #advert a:hover, #advert a:active, #advert a:visited{display:block;position:absolute;width:100%;height:100%;left:0;top:0;border:none;text-decoration: none}
+#advert #hpto-container .hpto-button{background:rgba(0,0,0,0.75);padding:5px;display:inline-block;border-radius:5px;margin:10px;}
+#advert #hpto-container{position:relative;height:100%;width:100%}
+
