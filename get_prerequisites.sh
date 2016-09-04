@@ -1,5 +1,6 @@
 #!/bin/bash
-DIR="$(dirname $(readlink -f $0))"
+#DIR="$(dirname $(readlink -f $0))"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 bits=$(uname -m)
 node_download_link=''
 electron_download_link=''

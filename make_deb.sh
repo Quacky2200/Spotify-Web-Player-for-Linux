@@ -93,6 +93,8 @@ echo "Package: $app\nVersion: $version\nSection: base\nPriority: optional\nArchi
 
 echo "\nMaking Debian post install script"
 postinstall="#!/bin/bash
+
+cd /usr/bin/spotifywebplayer
 . /usr/bin/spotifywebplayer/get_prerequisites.sh
 " 
 echo "$postinstall" > $release_dir/DEBIAN/postinst
