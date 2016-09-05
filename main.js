@@ -22,7 +22,6 @@ app.on('ready', function(){
     props.mainWindow = props.mainWindow();
     props.preferencesWindow = props.preferencesWindow();
     props.aboutWindow = props.aboutWindow();
-
     showDevToolsOnFocus(props.mainWindow);
     showDevToolsOnFocus(props.preferencesWindow);
     showDevToolsOnFocus(props.aboutWindow);
@@ -42,7 +41,9 @@ app.on('quit', () => {
     console.log('Exiting...');
 });
 function showDevToolsOnFocus(window){
-    if(window) window.on('show', () => {if(props.appSettings.ShowDevTools) window.openDevTools()});
+    if(window) window.on('show', () => {
+        if(props.appSettings.ShowDevTools) window.openDevTools()
+    });
 }
 
 //Make sure we only run one instance of the application

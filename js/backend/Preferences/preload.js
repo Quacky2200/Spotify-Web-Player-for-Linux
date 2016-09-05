@@ -46,8 +46,14 @@ document.onreadystatechange = function(){
 		}
 	});
 
+	$('input[name*="ShowTray"]').change(function(){
+		props.appSettings.ShowTray = $(this).prop('checked');
+		props.appSettings.save();
+		props.mainWindow.webContents.executeJavaScript('tray.toggleTray(' + props.appSettings.ShowTray + ')');
+	});
+
 	$('input[name*=\'NavBar\'], select').change(() => {
-		props.mainWindow.webContents.executeJavaScript('interface.load();interface.clean()')
+		props.mainWindow.webContents.executeJavaScript('interface.load();interface.clean()');
 		interface.load();
 		interface.clean();
 	});
@@ -56,5 +62,6 @@ document.onreadystatechange = function(){
 		props.appSettings.Theme = $(this).val();
 		props.appSettings.save();
 	});
+	$('select').val(props.appSettings.Theme);
 };
 

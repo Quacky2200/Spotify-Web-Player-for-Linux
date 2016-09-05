@@ -9,7 +9,13 @@ var template = [
         visible: false,
         click: () => {
           $('#suggest-area').toggleClass('show');
-          $($('.form-control'), $('iframe#suggest').contents()).focus();
+          $($('.form-control'), $('iframe#suggest').contents()).click();
+        }
+      },
+      {
+        label: 'Logout',
+        click: () => {
+          tray.contextMenu.logout.click();
         }
       },
       {
@@ -18,7 +24,8 @@ var template = [
         click: () => {
           tray.toggleTray(false);
           windowHook = false;
-          props.electron.app.quit
+          props.electron.app.quit();
+          props.process.exit(0);
         }
       }
     ]

@@ -8,6 +8,7 @@ global.appSettings = props.appSettings;
 global.controller = require('./controller');
 global.tray = require('./tray');
 global.interface = require('./interface');
+global.sing = require('./Sing!/sing');
 /**
  * Update controls according to login/control status
  */
@@ -20,6 +21,10 @@ function checkControlStatus(){
  * When the window closes, hide only if logged in
  */
 window.onbeforeunload = function(e) {
+    if (!user.isLoggedIn()){
+        props.mainWindow.setApplicationMenu(null);
+        return true;
+    }
   if(windowHook && props.appSettings.CloseToTray && props.appSettings.ShowTray){
   	props.mainWindow.hide();
   	return false;
@@ -57,7 +62,8 @@ window.addEventListener('message', function(event){
     	if(JSON.parse(event.data)['args'][0].indexOf("http") > 0) controller.information.update(); //Playing advert?
     	//Get our metadata from Spotify as we need a new image and the album name.
     	tray.toggleMediaButtons(true);
-	   controller.information.update();
+        sing.enableButton();
+	    controller.information.update();
     } else if (event.data.indexOf("player_play") > 0){
         controller.information.update();
     } else if (event.data.indexOf("player_pause") > 0){
@@ -65,7 +71,10 @@ window.addEventListener('message', function(event){
     	controller.information.update();
     } else if (event.data.indexOf('USER_ACTIVE') > 0 || event.data.indexOf("spb-connected") > 0){
         checkControlStatus();
-        //interface.load();
+        if (props.appSettings.lastURL !== window.location.href){
+            props.appSettings.lastURL = window.location.href;
+            props.appSettings.save();
+        }
     } else if (event.data.indexOf("user:impression") > 0){
         interface.updateAdvertisements();
     }

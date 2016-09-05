@@ -2,7 +2,7 @@
 <html>
 <head>
 <style>
-body{font-family: 'Open Sans', sans-serif, arial; overflow: scroll;overflow-x: hidden;}
+body{font-family: 'Open Sans', sans-serif, arial; overflow: scroll;overflow-x: hidden;-webkit-user-select:none;}
 a{text-decoration: none;}
 p{margin: 0px;}
 h1,h2{font-weight: 300;margin:0;}
@@ -68,7 +68,15 @@ label.toggle input[type='checkbox']:checked{
 	<div id='options'>
 		<form>
 			<table>
-				<tr><td><h2>Notifications</h2><span></span></td><td></td></tr>
+				<tr>
+					<td>
+						<h2>Notifications</h2>
+						<span>
+							
+						</span>
+					</td>
+					<td></td>
+				</tr>
 				<tr class='indent'>
 					<td>
 						<h2>Track Changes</h2>
@@ -110,6 +118,17 @@ label.toggle input[type='checkbox']:checked{
 					<td>
 						<label class='toggle'>
 							<input type='checkbox' name='Notifications.ShowPlaybackStopped'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Only When Focused</h2>
+						<span><i>Show any notification </i><b>but only</b> <i>when you're not using the player window</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='Notifications.OnlyWhenFocused'>
 						</label>
 					</td>
 				</tr>
@@ -177,9 +196,9 @@ label.toggle input[type='checkbox']:checked{
 						<span></span>
 					</td>
 					<td>
-						<label class='toggle'>
+						<!-- <label class='toggle'>
 							<input type="checkbox" name="NavBar.Itself">
-						</label>
+						</label> -->
 					</td>
 				</tr>
 				<tr class='indent'>
@@ -245,6 +264,17 @@ label.toggle input[type='checkbox']:checked{
 					<td>
 						<label class='toggle'>
 							<input type='checkbox' name='NavBar.Settings'>
+						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Show Sing! Icon</h2>
+						<span>Some people are pop stars and don't need lyrics, others, however...do.</span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='NavBar.Sing'>
 						</label>
 					</td>
 				</tr>

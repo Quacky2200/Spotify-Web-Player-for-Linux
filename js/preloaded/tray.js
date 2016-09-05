@@ -39,19 +39,19 @@ const tray = {
 	    }}
 	},
 	toggleTray: function(toggle){
-		if (toggle && appSettings.ShowTray){
+		if (toggle && props.appSettings.ShowTray){
 			if (!tray.appIcon) tray.appIcon = new Tray(props.APP_ICON_SMALL);
-				tray.appIcon.setContextMenu(Menu.buildFromTemplate([
-				    tray.contextMenu.togglePlayback,
-				    tray.contextMenu.previous,
-				    tray.contextMenu.next,
-				    {type:'separator'},
-				    tray.contextMenu.toggleSpotifyAppearance,
-				    tray.contextMenu.appPreferences,
-				    tray.contextMenu.logout,
-				    tray.contextMenu.quit 
-				]));
-		} else {
+			tray.appIcon.setContextMenu(Menu.buildFromTemplate([
+			    tray.contextMenu.togglePlayback,
+			    tray.contextMenu.previous,
+			    tray.contextMenu.next,
+			    {type:'separator'},
+			    tray.contextMenu.toggleSpotifyAppearance,
+			    tray.contextMenu.appPreferences,
+			    tray.contextMenu.logout,
+			    tray.contextMenu.quit 
+			]));
+		} else if (!toggle && tray.appIcon != null){
 			tray.appIcon.destroy();
 	    	tray.appIcon = null;
 		}

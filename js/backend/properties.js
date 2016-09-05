@@ -10,7 +10,10 @@ module.exports = function(electron){
         NAME: 'Spotify Web Player',
         fs: fs,
         os: os,
-        electron: electron, //: require('node-unofficialmxm') - Sadly MusixMatch use captcha to prevent bots :(,
+        electron: electron, 
+        mxm: require('node-unofficialmxm'),// - Sadly MusixMatch use captcha to prevent bots :(,
+        lyricCache: home + '/.spotifywebplayer/LyricCache',
+        albumCache: home + '/.spotifywebplayer/AlbumCache',
         process: process,
         console: console,
         APP_ICON: __dirname + '/../../icons/spotify-web-player.png',
@@ -25,7 +28,8 @@ module.exports = function(electron){
                     ShowTrackChange: true,
                     ShowPlaybackPlaying: true,
                     ShowPlaybackPaused: true,
-                    ShowPlaybackStopped: true
+                    ShowPlaybackStopped: true,
+                    OnlyWhenFocused: true
                 },
                 NavBar: {
                     Follow: true,
@@ -34,12 +38,14 @@ module.exports = function(electron){
                     YourMusic: true,
                     Browse: true,
                     Settings: true,
-                    Search: true
+                    Search: true,
+                    Sing: true
                 },
                 Theme: 'dark',
                 StartOnLogin: false,
                 StartHidden: false,
-                ShowDevTools: false
+                ShowDevTools: false,
+                lastURL: null
             }
         ),
         globalShortcut: electron.globalShortcut,
@@ -80,7 +86,7 @@ module.exports = function(electron){
         },
         aboutWindow: function(){
             var width = 600;
-            var height = 500;
+            var height = 520;
             var aboutWindow = new BrowserWindow({
                 title: 'About',
                 icon: global.props.APP_ICON,
@@ -139,12 +145,16 @@ module.exports = function(electron){
                     mainWindow.minimize();
                 });
             }
-            mainWindow.webContents.on('media-started-playing', function(){
-                console.log('Show notification ;)');
-                //media-paused
+            mainWindow.webContents.on('plugin-crashed', () => {
+                console.log('Plugin crashed and cannot continue.');
+                electron.app.quit();
             });
             //Setup a new window
-            mainWindow.loadURL(global.props.HOST);
+            mainWindow.loadURL((
+                props.appSettings.lastURL && props.appSettings.lastURL.indexOf('play.spotify.com') > -1 ?
+                props.appSettings.lastURL : 
+                global.props.HOST
+            ));
             mainWindow.on('page-title-updated', function(event){
                 event.preventDefault();
             });

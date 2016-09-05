@@ -1,7 +1,12 @@
-require('electron-cookies');
 global.remote = require('electron').remote;
 let props = remote.getGlobal('props');
 global.props = props;
+if (window.location.href == 'about:blank' || 
+    window.location.href == "data:text/html,chromewebdata"){
+  return require('./../backend/Error/preload.js');
+}
+require('electron-cookies');
+
 let dbus = remote.getGlobal('dbus');
 global.dbus = dbus;
 

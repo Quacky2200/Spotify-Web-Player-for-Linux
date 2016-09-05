@@ -32,7 +32,15 @@ interpreter.handle(process.stdin, {
         player.repeat = info.repeat;
     },
     notify: (info) => {
-        var file = '/tmp/spotifywebplayer-coverart-' + info.activeSong.album + '.jpeg';
+        var filepath = info.albumCache;
+        fs.access(filepath, fs.F_OK, (err) => {
+            if (err){
+                fs.mkdir(filepath, (err) => {
+                    if (err) console.log(err);
+                });
+            }
+        });
+        var file = filepath + '/' + info.activeSong.album + '.jpeg';
         fs.access(file, fs.F_OK, function(err){
             if (err){
                 request(info.activeSong.art, {encoding: 'binary'}, function(error, response, body) {
