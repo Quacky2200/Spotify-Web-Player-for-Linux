@@ -4,13 +4,23 @@
 A Node.JS application built with electron to turn Spotify's Web Player into a local player for a stable Spotify Player for Linux replacement
 
 ## Includes
-![Spotify - Notifications](https://cloud.githubusercontent.com/assets/4623599/17799657/39896b14-65d4-11e6-913a-14ae9f6fcc4d.png)
-![Spotify - Tray Icon](https://cloud.githubusercontent.com/assets/4623599/17799675/63a4c57e-65d4-11e6-8363-30a41ed7f67e.png)
 * Notifications 
-* Tray Icon with Play, Previous, Next, Logout, Close to Tray and Quit functionality. 
+* Tray Icon with Play, Previous, Next, Logout, and Quit functionality. 
 * Non-intrusive Spotify advertisements (except Spotify playback advertisements). 
-![Spotify - Non-intrustive Adverts](https://cloud.githubusercontent.com/assets/4623599/17799728/db82909e-65d4-11e6-98b3-ecccaf8de53a.png)
+* D-Bus/MPRIS support
+* Sing! A MusixMatch viewer integrated - sing your favourite songs from within the application
+* Light theme
+* Preferences - Customimize small things that can make a big difference
+* Search bar linked to Ctrl+S
+* Close To Tray (Minimize To Tray without the Tray Icon)
 
+##Screenshots
+![Notifications](https://cloud.githubusercontent.com/assets/4623599/17799657/39896b14-65d4-11e6-913a-14ae9f6fcc4d.png)
+![Tray Icon](https://cloud.githubusercontent.com/assets/4623599/17799675/63a4c57e-65d4-11e6-8363-30a41ed7f67e.png)
+![Controls in the Ubuntu Sound Menu](https://cloud.githubusercontent.com/assets/4623599/18234288/25695376-72f7-11e6-8ff8-b9409409008e.png)
+![Non-intrustive Adverts](https://cloud.githubusercontent.com/assets/4623599/17799728/db82909e-65d4-11e6-98b3-ecccaf8de53a.png)
+![Sing! A MusixMatch lyric integrated into the application](https://cloud.githubusercontent.com/assets/4623599/18258206/39226510-73c9-11e6-85c3-b58279fb88a1.png)
+![Light theme](https://cloud.githubusercontent.com/assets/4623599/18234249/1b5d019e-72f6-11e6-835d-4b63a24eb920.png)
 ## How to install
 
 Check out the [Releases](https://github.com/Quacky2200/Spotify-Web-Player-for-Linux/releases) page.
