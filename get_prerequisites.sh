@@ -11,7 +11,7 @@ case $bits in
 		electron_download_link="https://github.com/electron/electron/releases/download/v1.3.4/electron-v1.3.4-linux-ia32.zip"
 		;;
 	"x86_64")
-		node_download_link="https://nodejs.org/dist/v6.5.0/node-v6.5.0-linux-x86.tar.xz"
+		node_download_link="https://nodejs.org/dist/v6.5.0/node-v6.5.0-linux-x64.tar.xz"
 		electron_download_link="https://github.com/electron/electron/releases/download/v1.3.4/electron-v1.3.4-linux-x64.zip"
 		;;
 	*)
