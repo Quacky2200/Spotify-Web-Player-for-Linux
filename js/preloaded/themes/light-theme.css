@@ -18,7 +18,10 @@ body: {font-family: sans-serif;}
 html{
     background: #d8d8d8;/*height:inherit !important;*/
 }
-#nav-sing img {-webkit-filter: invert();}
+body.non-mobile, body.non-mobile .container {
+min-width: 200px !important;
+}
+#nav-sing img {-webkit-filter: invert();.tl-row .btn-play::after}
 #sing-ui{background: rgba(216,216,216,0.90) !important;;color: #333 !important;}
 body, iframe{color: #2f2f2f;background-color: #d8d8d8 !important; height: inherit !important;}
 a:not(.btn), a:link:not(.btn), a:not(.btn):active, a:not(.btn):visited, a:not(.btn):hover{color: #444444;}
@@ -133,6 +136,30 @@ body.show-nav>.container {
     background: transparent;
     border-color: #c5c5c5 !important;
 }
+.list-trackset tbody tr.selection-focus .list-track-more, 
+.list-playlist tbody tr.selection-focus .list-track-more, 
+.list-popular tbody tr.selection-focus .list-track-more, 
+.list-album tbody tr.selection-focus .list-track-more, 
+.list-search tbody tr.selection-focus .list-track-more, 
+.list-messages tbody tr.selection-focus .list-track-more, 
+.list-dev tbody tr.selection-focus .list-track-more,
+.list-trackset tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-playlist tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-popular tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-album tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-search tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-messages tbody tr:hover:not(.disc-row) .list-row-controls button, 
+.list-dev tbody tr:hover:not(.disc-row) .list-row-controls button,
+.list-trackset tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-playlist tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-popular tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-album tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-search tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-messages tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-dev tbody tr:hover:not(.disc-row) .list-row-controls button:hover{
+    background: #f3f3f3 !important;
+    color: #333 !important;
+}
 .list-trackset tbody tr:hover:not(.disc-row) td, 
 .list-playlist tbody tr:hover:not(.disc-row) td, 
 .list-popular tbody tr:hover:not(.disc-row) td, 
@@ -159,7 +186,14 @@ body.show-nav>.container {
 .list-dev tbody tr .list-item-hl{
     color: #333;
 }
-
+@media screen and (max-width: 800px){
+    .list-playlist tbody tr:hover:not(.disc-row) .list-row-albums, 
+    .list-playlist tbody .list-playlist tr.selection-focus:not(.disc-row) .list-row-albums, 
+    .list-playlist tbody tr:hover:not(.disc-row) .list-row-albums a, 
+    .list-playlist tbody .list-playlist tr.selection-focus:not(.disc-row) .list-row-albums a {
+        color: #333 !important;
+    }
+}
 .list-group-item.list-group-item-media:hover {
     background-color: rgba(255,255,255,0.6);
 }
@@ -176,11 +210,31 @@ body.show-nav>.container {
 #musicStrip .section-divider{
  padding: 10px 0;
 }
-.pf-app:not([data-play-source="playlist"]){padding-top: 47px;}
+.header-controllers .btn,
+.header-controllers .btn:hover{
+    background: white !important;
+    border: 1px solid white !important;
+    border-color: #e3e3e3 !important;
+    color: #333 !important;
+}
+.btn-primary.btn-play,
+.btn-primary.btn-play:hover {
+    color: #dfe0e6 !important;
+    background: #648f00 !important;
+    border-color: #648f00 !important;
+}
+.btn-primary.btn-play:hover {
+    background: #84bd00;
+}
+#pf-playlist-view{padding: 0 5px !important;}
+.container > .pf-app{padding-top: 47px !important;}
+body > .pf-app[data-play-source="playlist"]{padding-top: 0px !important;}
 .dropdown-interior-menu{background: #f3f3f3;}
-.dropdown-menu > li > a, .dropdown-interior-menu > li > a{
-    box-shadow: 0 1px 0 #bfbfbf;
-    color: #333;
+.dropdown-menu > li > a, .dropdown-interior-menu > li > a, 
+.dropdown-menu > li:first-child > a, 
+.dropdown-interior-menu > li:first-child > a{
+    box-shadow: 0 1px 0 #e8e8e8 !important;
+    color: #333 !important;
 }
 .dropdown-interior-menu > li > a:hover, 
 .dropdown-interior-menu > li > a:focus, 
@@ -203,11 +257,84 @@ hr{border-top: 1px solid #bfbfbf !important;margin: 10px 20px !important;}
     background: transparent; 
     padding: 10px;
 }
-.tl-row .btn-play {
+.tl-row .btn-play, 
+.tl-row .button-play{
     background: white !important;
 }
+.list-group-item.list-group-item-media.playable.large.playing .list-group-item-media-play{
+    color: #88898c !important;
+    background: white !important;
+}
+#playback-controls #widget-more{
+    color: white !important;
+}
+.list-group-item.list-group-item-media.playable.large:hover .list-group-item-media-play{
+    background: rgba(255,255,255,0.5) !important;
+    color: gray !important;
+}
+.list-playlist tbody tr:hover:not(.disc-row) .list-row-number,
+.list-playlist tbody tr.playing .list-row-number{
+    color: transparent !important;
+}
+.list-row-play .btn-play,
+.tl-play .btn-play,
+.button-play{
+    background: white !important;
+    color: #333 !important;
+    border-color: #e3e3e3 !important;
+    border: 1px solid #d0d0d0 !important;
+}
+.tl-play .btn:hover,
+.button-play:hover,
+.list-row-play .btn:hover,
+.list-playlist tbody tr.playing .btn.btn-play{
+    color: #84bd00 !important;
+}
+
+.s-query div {height:45px !important;border-bottom: 1px solid #c5c5c5 !important;}
+.s-query {margin: 0 20px !important}
+.s-header{margin: 0 20px !important}
+.list-trackset tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-playlist tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-popular tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-album tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-search tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-messages tbody tr:hover:not(.disc-row) .list-track-plus, 
+.list-dev tbody tr:hover:not(.disc-row) .list-track-plus,
+.list-trackset tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-playlist tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-popular tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-album tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-search tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-messages tbody tr:hover:not(.disc-row) .list-row-controls button:hover, 
+.list-dev tbody tr:hover:not(.disc-row) .list-row-controls button:hover{
+    background: white !important;
+}
+
+.header-artist .h-main-content{padding: 100px 20px !important;}
+.header-artist .h-main-content .h-data .h-title{color: white !important;}
+.header-image{border-bottom: 1px solid #c5c5c5 !important;}
+
+.albums .header{background: transparent !important;}
+.albums .header .h-title a, .albums .header .h-title a:link {color: #333 !important;}
+
+.tl-row:hover .tl-more .button:before, 
+.tl-row:hover .tl-save .button:before,
+.tl-save .button:before{
+    color: #333 !important;
+}
+.tl-row:hover .tl-more .button:before, .tl-row:hover .tl-save .button:before{
+    color
+}
+.tl-save .button:hover:before, .tl-more .button:hover:before{
+    color: #84bd00 !important;
+}
+
+.popover:not(.no-arrow).arrow-top:before{border-bottom-color:#f3f3f3;}
+.popover:not(.no-arrow).arrow-bottom:before{border-bottom-color: #f3f3f3;}
+.btn:hover:not(.just-changed):not(.stay-added):after,
 .tl-row .btn-play::after{
-    border: 1px solid #f3f3f3 !important;
+    border: 1px solid #e3e3e3;
 }
 .tl-row.playing {
     background: rgba(255,255,255,0.6) !important;
