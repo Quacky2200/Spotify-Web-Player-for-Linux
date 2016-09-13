@@ -1,13 +1,5 @@
 //Elements
 let ui, navButton, timeButton, timer;
-//Make lyrics cache if it doesn't exist
-props.fs.access(props.lyricCache, props.fs.F_OK, (err) => {
-	if (err){
-		props.fs.mkdir(props.lyricCache, (err) => {
-			if (err) console.log(err);
-		});
-	}
-});
 //Load UI Element first
 props.fs.readFile(__dirname + '/ui.html', function(err, data){
 	if(err) console.log(err);
@@ -52,6 +44,9 @@ props.fs.readFile(__dirname + '/ui.html', function(err, data){
 	    		singFuncs.load(controller.getTrackUri(), controller.getTrackName(), controller.getArtist());
 	    	}
 	    });
+	    $('a[id*=\'nav-\']').not('#nav-sing').click(function(){
+	    	if(singFuncs.isOpen()) singFuncs.toggleUI(false);
+	    });
 	});
 });
 function toggleLyricScroller(toggle){
@@ -67,7 +62,14 @@ function toggleLyricScroller(toggle){
 }
 const singFuncs = {
 	load: (trackURI, trackName, trackArtist) => {
-		//alert('TrackURI: ' + trackURI + ' \nName: ' + trackName + '\nArtist: ' + trackArtist);
+		//Make lyrics cache if it doesn't exist
+		props.fs.access(props.lyricCache, props.fs.F_OK, (err) => {
+			if (err){
+				props.fs.mkdir(props.lyricCache, (err) => {
+					if (err) console.log(err);
+				});
+			}
+		});
 		if (singFuncs.isOpen() && props.appSettings.NavBar.Sing && $('#sing-ui').attr('data-ref') != trackURI && trackURI && trackName && trackArtist){
 			singFuncs.showLoader();
 			var filepath = props.lyricCache + '/' + trackArtist.split(',')[0] + '-' + trackName.match(/(\w+)/g).join('-') + '.html';
@@ -79,9 +81,9 @@ const singFuncs = {
 						singFuncs.hideLoader();
 						if (err){
 							console.log(err);
-							$('#sing-ui #sing-container').html("<main class='centerstage'><div><h1>Sorry, I couldn't find the lyrics to this song.</h1></div></main>");
+							$('#sing-ui #sing-container').html("<main class='centerstage'><div><h1>Sorry, I couldn't find the lyrics to this song.</h1><h4>(" + err + ")</h4></div></main>");
 						} else {
-							lyrics = "<div id='lyrics'><h1>" + result.title + "</h1><h2>" + result.artist + "</h2><div>" + result.lyrics.replace(/\n/g, '<br/>') + "</div><br/><br/><p>Lyrics from MusixMatch, using <a href='https://github.com/Quacky2200/node-unofficialmxm'>node-unofficialmxm</a></p></div>";
+							lyrics = "<div id='lyrics'><h1>" + result.title + "</h1><h2>" + result.artists.join(', ') + "</h2><div>" + result.lyrics.replace(/\n/g, '<br/>') + "</div><br/><br/><p>Lyrics from MusixMatch, using <a href='https://github.com/Quacky2200/node-unofficialmxm'>node-unofficialmxm</a></p></div>";
 							props.fs.writeFile(filepath, lyrics, (err) => {
 								if (err) console.log(err);
 								$('#sing-ui #sing-container').html(lyrics);
@@ -92,9 +94,13 @@ const singFuncs = {
 					props.fs.readFile(filepath, (error, data) => {
 						singFuncs.hideLoader();
 						if (err){
-							$('#sing-ui #sing-container').html("<main class='centerstage'><div><h1>Sorry, I couldn't get the lyrics to this song.</h1></div></main>");
+							$('#sing-ui #sing-container').html("<main class='centerstage'><div><h1>Sorry, I couldn't get the lyrics to this song.</h1><h4>(" + error + ")</h4></div></main>");
 						} else {
 							$('#sing-ui #sing-container').html(data.toString());
+							$('#sing-ui #sing-container a').click(function(){
+								props.electron.shell.openExternal($(this).attr('href'));
+								return false;
+							});
 						}
 					});
 				}

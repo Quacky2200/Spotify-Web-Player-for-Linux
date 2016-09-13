@@ -15,7 +15,7 @@ var template = [
       {
         label: 'Logout',
         click: () => {
-          tray.contextMenu.logout.click();
+          user.logout();
         }
       },
       {
@@ -58,4 +58,16 @@ var template = [
     submenu: [{label: 'About', click: () => {props.aboutWindow.show();props.aboutWindow.focus();}}]
   }
 ];
-module.exports = Menu.buildFromTemplate(template);
+let _menu;
+module.exports = {
+  toggleMenu: (toggle) => {
+    if(toggle && !_menu){
+      _menu = Menu.buildFromTemplate(template);
+      props.electron.app.setApplicationMenu(_menu);
+    } else if(!toggle && _menu){
+      props.electron.app.setApplicationMenu(null);
+      _menu = null;
+    }
+  }
+}
+ 

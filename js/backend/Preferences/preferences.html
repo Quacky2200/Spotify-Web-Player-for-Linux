@@ -71,9 +71,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Notifications</h2>
-						<span>
-							
-						</span>
+						<span></span>
 					</td>
 					<td></td>
 				</tr>
@@ -124,7 +122,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Only When Focused</h2>
-						<span><i>Show any notification </i><b>but only</b> <i>when you're not using the player window</i></span>
+						<span>Show any enabled notification<i>&nbsp;but only&nbsp;</i>when you're not using the player window</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -160,11 +158,33 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Close To Tray</h2>
-						<span>Allows you to keep the window hidden whilst playing music and use the tray menu or application menu to quit.<br><i>The window will minimise if the tray icon is disabled.</i></span>
+						<span>Allows you to keep the window hidden whilst playing music and use the tray menu or application menu to quit.<br><i>The window will minimise if the tray icon is disabled</i></span>
 					</td>
 					<td>
 						<label class='toggle'>
 							<input type='checkbox' name='CloseToTray'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Close To Controller</h2>
+						<span>Allows you to keep the window hidden without an indicator or application icon taking up space<br/><i>Hint: MPRIS controllers have to raise Spotify Web Player for it to become unhidden</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='CloseToController'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Show Application Menu</h2>
+						<span>Whether Spotify Web Player should hide the application menu<br/>&nbsp;<i>Warning! Without a tray icon, you may not be able to get into the preferences window</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='ShowApplicationMenu'>
 						</label>
 					</td>
 				</tr>
@@ -181,8 +201,8 @@ label.toggle input[type='checkbox']:checked{
 				</tr>
 				<tr>
 					<td>
-						<h2>Start hidden</h2>
-						<span>Sometimes waiting is ok, Spotify Web Player is never gonna give you up</span>
+						<h2>Start Hidden</h2>
+						<span>Starts Spotify Web Player minimized<br/></span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -195,11 +215,7 @@ label.toggle input[type='checkbox']:checked{
 						<h2>Navbar</h2>
 						<span></span>
 					</td>
-					<td>
-						<!-- <label class='toggle'>
-							<input type="checkbox" name="NavBar.Itself">
-						</label> -->
-					</td>
+					<td></td>
 				</tr>
 				<tr class='indent'>
 					<td>

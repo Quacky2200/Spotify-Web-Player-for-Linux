@@ -34,6 +34,10 @@ module.exports = {
 	logout: function(){
 		tray.toggleMediaButtons(false);
 	    tray.toggleTray(false);
+	    appMenu.toggleMenu(false);
+	    if (dbus) dbus.interpreter.clearHandles();
+	    props.appSettings.lastURL = null;
+	    props.appSettings.save();
 		windowHook = false;
 		if (!props.mainWindow.isVisible()) props.mainWindow.show();
 		props.clearCache();

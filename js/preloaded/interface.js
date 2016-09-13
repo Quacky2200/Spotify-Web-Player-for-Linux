@@ -115,6 +115,9 @@ setInterval(() => {
 	interface.load(); 
 	//Clean will remove everything that's not :first-child that was inserted before.
 	interface.clean(); 
+	if($('#modal-notification-area').is(':visible') && $('#modal-notification-area #dialog #indicator').text() == "Can't connect to Spotify. Trying again now..."){
+		props.mainWindow.loadURL('about:blank');
+	}
 }, 5e3);
 document.addEventListener("visibilitychange", function(){
 	window_focus = document.visibilityState == "visible";

@@ -17,6 +17,7 @@ shortcuts = {
 	'MediaPlayPause': () => {controller.playPause()},
 	'MediaPreviousTrack': () => {controller.previous()},
 }
+
 const controller = {
 	information: {
 		albumCache: props.albumCache,
@@ -25,56 +26,50 @@ const controller = {
 		shuffle: false,
 		status: 'Stopped',
 		activeSong: {id: '', uri: '', name: '', album: '', artists: '', art: '', length: 0},
-		update: () => {
+		update: (notify) => {
 	  		var isPlaying = controller.isPlaying() == 'Playing';
 			var uri = controller.getTrackUri();
 			var activeSong = controller.information.activeSong;
-			var notify = controller.information._isNotificationWorthy();
 			controller.information.status = controller.isPlaying();
 			controller.information.shuffle = controller.isShuffled();
 			controller.information.repeat = controller.isRepeat();
 			controller.toggleGlobalShortcuts(isPlaying);
-			if(!uri && isPlaying){
-				activeSong.name = controller.getTrackName();
-				activeSong.id = 0;
-				activeSong.album = '';
-				activeSong.artists = controller.getArtist();
-				activeSong.art = controller.getAlbumArt();
-				activeSong.length = 3e+7; //30 Seconds (approximate advertisement length?)
-				controller.information._updateMpris();		
-				if(notify) controller.information.sendNotification();
-				if(uri) sing.load(uri, activeSong.name, activeSong.artists);
-			} else if(uri && isPlaying){
-				controller.getTrackInfo((data) => {
+			
+			if(uri && uri != activeSong.uri){
+				controller.getTrackInfo(uri, (data) => {
 					activeSong.uri = uri;
-					activeSong.id = data['id'];
+					activeSong.id = data['track_number'];
 					activeSong.name = data['name'];
 					activeSong.album = data['album']['name'];
 					activeSong.artists = buildArtistsString(data['artists']);
-					activeSong.art = data['album']['images'][0]['url'],
+					activeSong.art = data['album']['images'][1]['url'],
 					activeSong.length = data['duration_ms'] * 1000; //Length in Microseconds
 					controller.information._updateMpris();
-					if(notify) controller.information.sendNotification();
+					activeSong.artists = controller.getArtist();
+					
 					sing.load(uri, activeSong.name, activeSong.artists);
+					if (notify) controller.information.sendNotification();
+					controller.information._updateMpris();
 				});
-			} else if (uri == controller.information.activeSong.uri){
+			} else if(uri && uri == activeSong.uri) {
 				if (notify) controller.information.sendNotification();
 				controller.information._updateMpris();
+				sing.load(uri, controller.getTrackName(), controller.getArtist());
+				// activeSong.name = controller.getTrackName();
+				// //Adverts don't have albums!
+				// activeSong.album = (!uri ? '' : controller.getAlbum()); 
+				// activeSong.artists = controller.getArtist();
+				// activeSong.id = 0;
+				// activeSong.uri = uri;
+				// activeSong.length = 3e7;//30 seconds for average advert?
+				// activeSong.art = controller.getAlbumArt();
+				// if (notify) controller.information.sendNotification();
+				// controller.information._updateMpris();
 			}
-		},
-		_isNotificationWorthy: () => {
-			var hasPlaybackChanged = controller.information.status != controller.isPlaying();
-			var isTrackChange = controller.information.activeSong.uri != controller.getTrackUri();
-			var isTrackChangeWorthy = isTrackChange && props.appSettings.Notifications.ShowTrackChange;
-			var isPauseWorthy = hasPlaybackChanged && controller.isPlaying() == 'Paused' && props.appSettings.Notifications.ShowPlaybackPaused;
-			var isStoppedWorthy = hasPlaybackChanged && controller.isPlaying() == 'Stopped' && props.appSettings.Notifications.ShowPlaybackStopped;
-			var isPlayingWorthy = hasPlaybackChanged && controller.isPlaying() == 'Playing' && !isTrackChange && props.appSettings.Notifications.ShowPlaybackPlaying;
-			var isFocusWorthy = (props.appSettings.Notifications.OnlyWhenFocused ? !props.mainWindow.isFocused() : true);
-			return (isTrackChangeWorthy || isPauseWorthy || isStoppedWorthy || isPlayingWorthy) && isFocusWorthy;
 		},
 		sendNotification: () => {
 			if(dbus) {
-				dbus.interpreter.send(dbus.instance.stdin, "notify", controller.information);
+				dbus.interpreter.send(dbus.instances.MPRISAndNotifications.stdin, "notify", controller.information);
 			} else {
 				//Suport OS X & Windows with other notification systems
 				new Notification(
@@ -89,7 +84,7 @@ const controller = {
 			}
 		},
 		_updateMpris: () => {
-			if(dbus) dbus.interpreter.send(dbus.instance.stdin, 'updateMpris', controller.information);
+			if(dbus) dbus.interpreter.send(dbus.instances.MPRISAndNotifications.stdin, 'updateMpris', controller.information);
 		},
 	},
 	getTrackUri: () => {
@@ -111,9 +106,7 @@ const controller = {
 	getAlbum: () => {
 		return $('#cover-art a', $('#app-player').contents()).attr('data-tooltip').replace(/( by (.*))/, '');
 	},
-	getTrackInfo: (callback) => {
-		var uri = controller.getTrackUri();
-		if (!uri) return;
+	getTrackInfo: (uri, callback) => {
 		$.getJSON("https://api.spotify.com/v1/tracks/" + uri, callback);
 	},
 	play: () => {
@@ -190,9 +183,10 @@ const controller = {
 		return playlists;
 	},
 	setupDBusHandlers: () => {
+		dbus.interpreter.clearHandles();
 		if(props.process.platform == 'linux' && dbus){
-			if(!dbus.instance) dbus.reload();
-			dbus.interpreter.handle(dbus.instance.stdout, {
+			if(!dbus.instances.MPRISAndNotifications) dbus.reload();
+			dbus.interpreter.handle(dbus.instances.MPRISAndNotifications.stdout, {
 				Quit: () => {tray.contextMenu.quit.click},
 				Raise: () => {props.mainWindow.show();props.mainWindow.focus();},
 				Play: controller.play,
@@ -202,8 +196,13 @@ const controller = {
 				Stop: controller.stop,
 				openUri: (uri) => {console.log('openUri (MPRIS specification) not implemented.');}
 			});
+			dbus.interpreter.handle(dbus.instances.MediaKeys.stdout, {
+				PlayPause: controller.playPause,
+				Next: controller.next,
+				Previous: controller.previous
+			});
 		} else if (props.process.platform == 'linux'){
-			console.err('dbus is undefined');
+			console.err('dbus is undefined')
 		}
 	},
 	/**
@@ -222,5 +221,13 @@ const controller = {
 		}
 	}
 };
+$('button#next, button#previous, button#play-pause', $('iframe#app-player').contents()).click(() => {
+	var times = 0; 
+	var timer = setInterval(() => {
+		if (times > 5) return clearInterval(timer);
+		controller.update(false);
+	}, 1000);
+})
+
 controller.setupDBusHandlers();
 module.exports = controller;

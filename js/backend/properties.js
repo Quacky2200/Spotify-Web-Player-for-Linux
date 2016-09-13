@@ -4,8 +4,39 @@ module.exports = function(electron){
     const os = require('os');
     const fs = require('fs');
     var home = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+    var appSettings = require('./app-settings')(
+        home + '/.spotifywebplayer/preferences.json',
+        {
+            CloseToTray: true,
+            CloseToController: false,
+            ShowApplicationMenu: true,
+            ShowTray: true,
+            Notifications: {
+                ShowTrackChange: true,
+                ShowPlaybackPlaying: true,
+                ShowPlaybackPaused: true,
+                ShowPlaybackStopped: true,
+                OnlyWhenFocused: true,
+            },
+            NavBar: {
+                Follow: true,
+                User: true,
+                Radio: true,
+                YourMusic: true,
+                Browse: true,
+                Settings: true,
+                Search: true,
+                Sing: true
+            },
+            Theme: 'dark',
+            StartOnLogin: false,
+            StartHidden: false,
+            ShowDevTools: false,
+            lastURL: null
+        }
+    );
     //Global properties that may be required by the web application
-    return {
+    const props = {
         PROC_NAME: 'spotifywebplayer',
         NAME: 'Spotify Web Player',
         fs: fs,
@@ -19,35 +50,7 @@ module.exports = function(electron){
         APP_ICON: __dirname + '/../../icons/spotify-web-player.png',
         APP_ICON_SMALL: __dirname + '/../../icons/spotify-ico-small.png',
         userhome: home,
-        appSettings: require('./app-settings')(
-            home + '/.spotifywebplayer/preferences.json',
-            { 
-                CloseToTray: true,
-                ShowTray: true,
-                Notifications: {
-                    ShowTrackChange: true,
-                    ShowPlaybackPlaying: true,
-                    ShowPlaybackPaused: true,
-                    ShowPlaybackStopped: true,
-                    OnlyWhenFocused: true
-                },
-                NavBar: {
-                    Follow: true,
-                    User: true,
-                    Radio: true,
-                    YourMusic: true,
-                    Browse: true,
-                    Settings: true,
-                    Search: true,
-                    Sing: true
-                },
-                Theme: 'dark',
-                StartOnLogin: false,
-                StartHidden: false,
-                ShowDevTools: false,
-                lastURL: null
-            }
-        ),
+        appSettings: appSettings,
         globalShortcut: electron.globalShortcut,
         APP_DIR: home + '/.spotifywebplayer',
         HOST: 'https://play.spotify.com',
@@ -96,6 +99,7 @@ module.exports = function(electron){
                 minHeight: height,
                 maxWidth: width,
                 maxHeight: height,
+                resizable: false,
                 show: false,
                 webPreferences: {preload: __dirname + '/About/preload.js'}
             });
@@ -115,6 +119,7 @@ module.exports = function(electron){
                 minHeight: height,
                 maxWidth: width,
                 maxHeight: height,
+                resizable: false,
                 show: false,
                 webPreferences: {preload: __dirname + '/Preferences/preload.js'}
             });
@@ -127,7 +132,7 @@ module.exports = function(electron){
                 icon: global.props.APP_ICON,
                 width: 1200,
                 height: 700,
-                show: !props.appSettings.StartHidden,
+                show: false,
                 backgroundColor: "#121314",
                 minWidth: 800,
                 minHeight: 600,
@@ -135,26 +140,19 @@ module.exports = function(electron){
                   nodeIntegration: false,
                   preload: __dirname + "/../preloaded/main.js",
                   plugins: true,
+                  webSecurity: false,
                   allowDisplayingInsecureContent: true,
-                  allowRunningInsecureContent: true
+                  allowRunningInsecureContent: true,
                 }
             });
-            if(props.appSettings.StartHidden){
-                mainWindow.webContents.once('did-finish-load', function(){
-                    //mainWindow.show();
-                    mainWindow.minimize();
+            appSettings.open((err, data) => { 
+                mainWindow.webContents.once('dom-ready', () => {
+                    mainWindow.show();
+                    if(appSettings.StartHidden) mainWindow.minimize();
                 });
-            }
-            mainWindow.webContents.on('plugin-crashed', () => {
-                console.log('Plugin crashed and cannot continue.');
-                electron.app.quit();
+                mainWindow.loadURL((appSettings.lastURL && appSettings.lastURL.indexOf('play.spotify.com') > -1 ? appSettings.lastURL : props.HOST));
+                if (appSettings.ShowDevTools) mainWindow.openDevTools();
             });
-            //Setup a new window
-            mainWindow.loadURL((
-                props.appSettings.lastURL && props.appSettings.lastURL.indexOf('play.spotify.com') > -1 ?
-                props.appSettings.lastURL : 
-                global.props.HOST
-            ));
             mainWindow.on('page-title-updated', function(event){
                 event.preventDefault();
             });
@@ -167,4 +165,5 @@ module.exports = function(electron){
             return mainWindow;
         }
     };
+    return props;
 };

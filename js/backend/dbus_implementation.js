@@ -1,39 +1,57 @@
 /*
  * @author Matthew James <Quacky2200@hotmail.com>
- * D-Bus MPRIS Messaging implementer
+ * D-Bus MPRIS, Notifications and Media Keys Messaging Implementer
  */
 var child_process = require('child_process');
 var spawn = child_process.spawn;
 var lib_node = process.cwd() + '/libs/node/bin/node';
 const interpreter = require('./dbus_interpreter');
-let dbus = spawnDBus();
+let MPRISAndNotifications = spawnMPRISAndNotificationService();
+let MediaKeys = spawnMediaKeyService();
 
-function spawnDBus(){
-    var spawned = spawn(lib_node, [__dirname + '/dbus_service.js']);
+function spawnMPRISAndNotificationService(){
+    var spawned = spawn(lib_node, [__dirname + '/MPRISAndNotifications_service.js']);
     spawned.stderr.on('data', (data) => {
-        console.log('D-Bus Error: ' + data.toString())
+        console.log('MPRIS & Notification Error: ' + data.toString())
     });
     spawned.stdout.on('data', (data) => {
-        console.log('D-Bus/MPRIS says: \n' + data.toString());
+        console.log('MPRIS & Notification service: \n' + data.toString());
     });
     spawned.on('exit', () => {
-        console.log('D-Bus has unexpectedly disconnected.');
+        console.log('MPRIS & Notification service quit!');
+    });
+    return spawned;
+}
+function spawnMediaKeyService(){
+    var spawned = spawn(lib_node, [__dirname + '/MediaKeys_service.js']);
+    spawned.stderr.on('data', (data)=>{
+        console.log('Media Key Error: ' + data.toString());
+    });
+    spawned.stdout.on('data', (data) => {
+        console.log('Media Keys service: ' + data.toString());
+    });
+    spawned.on('exit', () => {
+        console.log('Media Keys quit!');
     });
     return spawned;
 }
 
 module.exports = {
-    instance: dbus,
+    instances: {
+        MPRISAndNotifications: MPRISAndNotifications,
+        MediaKeys: MediaKeys
+    },
     interpreter: interpreter,
     reload: () => {
-	   dbus = spawnDBus();
+	   MPRISAndNotifications = spawnMPRISAndNotificationService();
+       MediaKeys = spawnMediaKeyService();
     },
     quit: () => {
         try {
-	       process.kill(dbus.pid);
-           dbus = null;
-	    } catch (e){
-	    //D-Bus quitted early
-        }
+	       process.kill(MPRISAndNotifications.pid);
+           process.kill(MediaKeys.pid);
+           MPRISAndNotifications = null;
+           MediaKeys = null;
+	    } catch (e){}
     }
 };

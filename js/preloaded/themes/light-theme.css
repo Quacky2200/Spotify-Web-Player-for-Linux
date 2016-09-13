@@ -331,7 +331,7 @@ hr{border-top: 1px solid #bfbfbf !important;margin: 10px 20px !important;}
 }
 
 .popover:not(.no-arrow).arrow-top:before{border-bottom-color:#f3f3f3;}
-.popover:not(.no-arrow).arrow-bottom:before{border-bottom-color: #f3f3f3;}
+.popover:not(.no-arrow).arrow-bottom:before{border-top-color:#f3f3f3;}
 .btn:hover:not(.just-changed):not(.stay-added):after,
 .tl-row .btn-play::after{
     border: 1px solid #e3e3e3;

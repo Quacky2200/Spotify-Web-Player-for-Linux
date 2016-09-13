@@ -1,23 +1,16 @@
+require('electron-cookies');
 global.remote = require('electron').remote;
 let props = remote.getGlobal('props');
 global.props = props;
-if (window.location.href == 'about:blank' || 
-    window.location.href == "data:text/html,chromewebdata"){
-  return require('./../backend/Error/preload.js');
-}
-require('electron-cookies');
 
 let dbus = remote.getGlobal('dbus');
 global.dbus = dbus;
-
 console.log = props.console.log;
-console.error = props.console.log;
-console.info = () => {};
 
 //If the window is a pop-up window
 if (window.opener){
-  //Set our default properties for the popup window and escape.
   var popupWindow = remote.getCurrentWindow();
+  //Set our default properties for the popup window and escape.  
   popupWindow.setSize(800, 600);
   popupWindow.setMenu(null);
   popupWindow.show();

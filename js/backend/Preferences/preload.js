@@ -2,7 +2,9 @@ global.remote = require('electron').remote;
 let props = remote.getGlobal('props');
 var AutoLaunch = require('auto-launch');
 let autolaunch = new AutoLaunch({
-	name: 'Spotify Web Player for Linux'
+	name: 'Spotify Web Player for Linux',
+	//A 10 second sleep allows the desktop to load, otherwise no dice... :(
+	path: '/bin/bash -c "sleep 10 && . ' + props.process.cwd() + '/spotifywebplayer"'
 });
 global.props = props;
 global.windowHook = true;
@@ -38,11 +40,14 @@ document.onreadystatechange = function(){
 	recursivelySetupSettings(props.appSettings, ['Theme']);
 
 	$('input[name=\'StartOnLogin\']').change(function(){
-		console.log(props.process.cwd());
-		if($(this).prop('checked')){
-			autolaunch.enable();
+		if (props.process.platform == 'linux'){
+			if($(this).prop('checked')){
+				autolaunch.enable();
+			} else {
+				autolaunch.disable();
+			}
 		} else {
-			autolaunch.disable();
+			app.setLoginItemSettings({openAtLogin: $(this).prop('checked')});
 		}
 	});
 
@@ -50,6 +55,11 @@ document.onreadystatechange = function(){
 		props.appSettings.ShowTray = $(this).prop('checked');
 		props.appSettings.save();
 		props.mainWindow.webContents.executeJavaScript('tray.toggleTray(' + props.appSettings.ShowTray + ')');
+	});
+	$('input[name*="ShowApplicationMenu"]').change(function(){
+		props.appSettings.ShowApplicationMenu = $(this).prop('checked');
+		props.appSettings.save();
+		props.mainWindow.webContents.executeJavaScript('appMenu.toggleMenu(' + props.appSettings.ShowApplicationMenu + ')');
 	});
 
 	$('input[name*=\'NavBar\'], select').change(() => {

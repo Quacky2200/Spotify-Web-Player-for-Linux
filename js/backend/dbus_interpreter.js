@@ -17,6 +17,7 @@
  * The JSON string has a standard format of
  * {"command": "doSomething", args: {"key":"test"}}
  */
+ let events = {};
 const interpreter = {
 	/*
 	 * Encapsulate an event object into a sendable string for decapsulation
@@ -41,9 +42,19 @@ const interpreter = {
 	handle: (std, handlers) => {
 	    std.on('data', function(data){
 	        var message = interpreter.decapsulate(data.toString());
+	        events = handlers;
 	        //Try processing the command/event
-	        if(message && message.command && handlers.hasOwnProperty(message.command)) handlers[message.command](message.args);
+	        if(message && message.command && events.hasOwnProperty(message.command)) {
+	        	try{
+	        		events[message.command](message.args);
+	        	} catch (e) {
+	        		console.log('Handles have not been released! - ' + e);
+	        	}
+	        }
 	    });	
+	},
+	clearHandles: function(){
+		events = {};
 	},
 	/*
 	 * Send a message to a process 
