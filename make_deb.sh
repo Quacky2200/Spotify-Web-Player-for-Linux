@@ -2,12 +2,10 @@
 bits=$1
 DIR="$(dirname $(readlink -f $0))"
 echo "Trying to build .deb for $bits"
-node_download_link=""
-electron_download_link=""
 debarch=""
 flasharch=""
 app="spotifywebplayer"
-version="0.9.5-1"
+version="1.0.0"
 author="Matthew James"
 email="Quacky2200@hotmail.com"
 app_path="/usr/bin/$app"
@@ -20,16 +18,15 @@ app_share_execs="$app_share/applications"
 description="Music for every moment. Spotify is a digital music service that gives you access to millions of songs. (unofficial client - see https://github.com/Quacky2200/Spotify-Web-Player-for-Linux for details)"
 launcher="[Desktop Entry]
 Name=Spotify Web Player
-Comment=
+Comment=$description
 Version=$version
 Exec=bash /usr/bin/$app/$app
 Path=/usr/bin/$app
-Icon=spotify-web-player
+Icon=spotify
 Categories=GNOME;GTK;AudioVideo;Audio;Player;
 Actions=PlayPause;Next;Previous;
 Type=Application
 Terminal=false
-Description=$description
 
 [Desktop Action PlayPause]
 Name=Play/Pause
@@ -47,15 +44,11 @@ Exec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.$app /org/m
 case $bits in
 	"86"|"x86"|"32"|"ia32"|"i386"|"i686")
 		echo "32Bit/x86 architecture recognised"
-		node_download_link="https://nodejs.org/dist/v6.5.0/node-v6.5.0-linux-x86.tar.xz"
-		electron_download_link="https://github.com/electron/electron/releases/download/v1.3.4/electron-v1.3.4-linux-ia32.zip"
 		debarch="i386"
 		flasharch="ia32"
 		;;
 	"64"|"x64"|"amd_64"|"x86_64")
 		echo "64Bit/x64 architecture recognised"
-		node_download_link="https://nodejs.org/dist/v6.5.0/node-v6.5.0-linux-x86.tar.xz"
-		electron_download_link="https://github.com/electron/electron/releases/download/v1.3.4/electron-v1.3.4-linux-x64.zip"
 		debarch="amd64"
 		flasharch="x64"
 		;;
@@ -72,7 +65,7 @@ echo "\nMake all temporary directories for release"
 mkdir -p $release_dir/DEBIAN $app_pixmaps $app_bin $app_share_execs
 
 echo "\nCopy Spotify icon to pixbufs"
-cp $DIR/icons/spotify-web-player.png $app_pixmaps/
+cp $DIR/icons/spotify.png $app_pixmaps/
 
 echo "\nCreate launcher (.desktop) into applications"
 echo "$launcher" > $app_share_execs/$app.desktop

@@ -4,8 +4,7 @@
  */
 const electron = require('electron');
 const app = electron.app;
-let dbus = (process.platform == 'linux' ? require('./js/backend/dbus_implementation') : null);
-global.dbus = dbus;
+
 let props = require('./js/backend/properties')(electron);
 global.props = props;
 var plugins = require('./js/backend/plugins')(app);
@@ -26,13 +25,6 @@ app.on('ready', function(){
     showDevToolsOnFocus(props.preferencesWindow);
     showDevToolsOnFocus(props.aboutWindow);
     props.mainWindow.on('closed', () => {
-	if(dbus) {
-	    try{
-	        dbus.quit();
-	    } catch (e){
-	        console.log(e);
-            }
-        }
         app.quit();
 	    process.exit(0);
     });

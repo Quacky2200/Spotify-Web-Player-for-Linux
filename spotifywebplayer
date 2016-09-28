@@ -1,4 +1,6 @@
 #!/bin/sh
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-#DIR=$(dirname $0)
-$DIR/libs/electron/spotifywebplayer ./
+OLDDIR=$(pwd)
+cd $DIR
+$DIR/libs/electron/spotifywebplayer $DIR/.
+cd $OLDDIR

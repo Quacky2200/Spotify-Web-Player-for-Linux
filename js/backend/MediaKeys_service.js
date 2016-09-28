@@ -1,8 +1,13 @@
-const interpreter = require('./dbus_interpreter');
-function send(command, args){
-    console.log('Sending ' + command + ' event');
-    interpreter.send(process.stdout, command, args);
-}
+/*
+ * @author Matthew James <Quacky2200@hotmail.com>
+ * Media Keys D-Bus Service
+ */
+//Always make sure we're running as a proper name!
+process.title = 'spotifywebplayer';
+
+const DBusInterpeter = require('./dbus_interpreter');
+var interpreter = new DBusInterpeter(null, process.stdout);
+
 var DBus = require('dbus');
 var dbus = new DBus();
 var bus = dbus.getBus('session');
@@ -11,16 +16,16 @@ bus.getInterface('org.gnome.SettingsDaemon', '/org/gnome/SettingsDaemon/MediaKey
     iface.on('MediaPlayerKeyPressed', function (n, value) {
         switch (value) {
             case 'Play': 
-                send('PlayPause'); 
+                interpreter.send('PlayPause'); 
                 break;
             case 'Next': 
-                send('Next'); 
+                interpreter.send('Next'); 
                 break;
             case 'Previous': 
-                send('Previous'); 
+                interpreter.send('Previous'); 
                 break;
             case 'Stop': 
-                send('Stop'); 
+                interpreter.send('Stop'); 
                 break;
         }
     });

@@ -3,10 +3,6 @@ global.remote = require('electron').remote;
 let props = remote.getGlobal('props');
 global.props = props;
 
-let dbus = remote.getGlobal('dbus');
-global.dbus = dbus;
-console.log = props.console.log;
-
 //If the window is a pop-up window
 if (window.opener){
   var popupWindow = remote.getCurrentWindow();

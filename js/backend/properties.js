@@ -11,12 +11,13 @@ module.exports = function(electron){
             CloseToController: false,
             ShowApplicationMenu: true,
             ShowTray: true,
+            TrayIcon: 'lime',
             Notifications: {
                 ShowTrackChange: true,
                 ShowPlaybackPlaying: true,
                 ShowPlaybackPaused: true,
                 ShowPlaybackStopped: true,
-                OnlyWhenFocused: true,
+                OnlyWhenFocused: true
             },
             NavBar: {
                 Follow: true,
@@ -28,6 +29,7 @@ module.exports = function(electron){
                 Search: true,
                 Sing: true
             },
+            AlbumCacheDisabled: false,
             Theme: 'dark',
             StartOnLogin: false,
             StartHidden: false,
@@ -48,7 +50,7 @@ module.exports = function(electron){
         process: process,
         console: console,
         APP_ICON: __dirname + '/../../icons/spotify-web-player.png',
-        APP_ICON_SMALL: __dirname + '/../../icons/spotify-ico-small.png',
+        APP_ICON_DIR: __dirname + '/../../icons',
         userhome: home,
         appSettings: appSettings,
         globalShortcut: electron.globalShortcut,

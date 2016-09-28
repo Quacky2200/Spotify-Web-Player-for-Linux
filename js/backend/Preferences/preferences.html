@@ -146,13 +146,36 @@ label.toggle input[type='checkbox']:checked{
 				</tr>
 				<tr>
 					<td>
-						<h2>Show Tray Icon</h2>
+						<h2>Tray</h2>
+						<span></span>
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Enabled</h2>
 						<span>Should Spotify Web Player show a tray icon?</span>
 					</td>
 					<td>
 						<label class='toggle'>
 							<input type='checkbox' name='ShowTray'>
 						</label>
+					</td>
+				</tr>
+				<tr class='indent'>
+					<td>
+						<h2>Icon</h2>
+						<span>Mix-&amp;-Match the tray icon to your DE/Icon style</span>
+					</td>
+					<td>
+						<select name='TrayIcon'>
+							<option value='old'>Old Spotify</option>
+							<option value='green'>Green Spotify</option>
+							<option value='lime'>Lime Spotify</option>
+							<option value='white'>White Spotify</option>
+							<option value='black'>Black Spotify</option>
+						</select>
 					</td>
 				</tr>
 				<tr>
@@ -169,7 +192,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Close To Controller</h2>
-						<span>Allows you to keep the window hidden without an indicator or application icon taking up space<br/><i>Hint: MPRIS controllers have to raise Spotify Web Player for it to become unhidden</i></span>
+						<span>Allows you to keep the window hidden without an indicator or application icon taking up space<br/><i>Warning: MPRIS controllers have to raise Spotify Web Player for it to become unhidden</i></span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -292,6 +315,35 @@ label.toggle input[type='checkbox']:checked{
 						<label class='toggle'>
 							<input type='checkbox' name='NavBar.Sing'>
 						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Store Album Art?</h2>
+						<span>Sometimes you want album art, other times it's just art...<br/><i>Note: Album Art will still be downloaded temporarily to /tmp for notifications (but deleted on reboot)</i></span>
+					</td>
+					<td>
+						<label class='toggle'>
+							<input type='checkbox' name='AlbumCacheDisabled'>
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Clean AlbumCache</h2>
+						<span>This will remove all album art covers</span>
+					</td>
+					<td>
+						<a class='btn btn-primary clean-album-cache'>Clean Me</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Clean LyricCache</h2>
+						<span>This will remove all the lyrics you have saved</span>
+					</td>
+					<td>
+						<a class='btn btn-primary clean-lyric-cache'>Clean Me</a>
 					</td>
 				</tr>
 				<tr>

@@ -3,7 +3,6 @@
  * Interface controller that modifies the webpage to create 
  * non-intrusive advertising and optional themes.
  */
-
 let advertisement_CSS;
 let fs = props.fs;
 let timeout;
@@ -79,7 +78,6 @@ let interface = {
 	        $('body').prepend(CSS);
 	        injectIframe($(ALL_IFRAMES), CSS);
 		}
-		
 	},
 	showAdvert: () => {
 		if($('#window_advert').length > 0) $('#window_advert').remove();
@@ -110,15 +108,6 @@ let interface = {
 		$('style.controlbot:not(:first-child)').remove();
 	}
 };
-setInterval(() => {
-	//Will load the most recent prended as :first-child
-	interface.load(); 
-	//Clean will remove everything that's not :first-child that was inserted before.
-	interface.clean(); 
-	if($('#modal-notification-area').is(':visible') && $('#modal-notification-area #dialog #indicator').text() == "Can't connect to Spotify. Trying again now..."){
-		props.mainWindow.loadURL('about:blank');
-	}
-}, 5e3);
 document.addEventListener("visibilitychange", function(){
 	window_focus = document.visibilityState == "visible";
 	if(!window_focus){

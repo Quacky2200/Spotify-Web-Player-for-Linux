@@ -36,5 +36,3 @@ if(window.location.href.indexOf("oauth?") >= 0){
         });
     }
 }
-
-

@@ -1,7 +1,7 @@
 {
   "name": "spotifywebplayer",
   "productName": "Spotify Web Player",
-  "version": "0.9.5-1",
+  "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "auto-launch": "^4.0.0",
+    "dbus": "^0.2.19",
     "electron-cookies": "^1.1.0",
     "freedesktop-notifications": "^1.2.2",
     "mpris-service": "^1.1.1",

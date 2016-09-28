@@ -1,57 +1,42 @@
-/*
- * @author Matthew James <Quacky2200@hotmail.com>
- * D-Bus MPRIS, Notifications and Media Keys Messaging Implementer
- */
-var child_process = require('child_process');
-var spawn = child_process.spawn;
-var lib_node = process.cwd() + '/libs/node/bin/node';
-const interpreter = require('./dbus_interpreter');
-let MPRISAndNotifications = spawnMPRISAndNotificationService();
-let MediaKeys = spawnMediaKeyService();
+const childProcess = require('child_process');
+const spawn = childProcess.spawn;
+const LIBNODE = process.cwd() + '/libs/node/bin/node';
+const DBusInterpreter = require('./dbus_interpreter');
 
-function spawnMPRISAndNotificationService(){
-    var spawned = spawn(lib_node, [__dirname + '/MPRISAndNotifications_service.js']);
-    spawned.stderr.on('data', (data) => {
-        console.log('MPRIS & Notification Error: ' + data.toString())
-    });
-    spawned.stdout.on('data', (data) => {
-        console.log('MPRIS & Notification service: \n' + data.toString());
-    });
-    spawned.on('exit', () => {
-        console.log('MPRIS & Notification service quit!');
-    });
-    return spawned;
-}
-function spawnMediaKeyService(){
-    var spawned = spawn(lib_node, [__dirname + '/MediaKeys_service.js']);
-    spawned.stderr.on('data', (data)=>{
-        console.log('Media Key Error: ' + data.toString());
-    });
-    spawned.stdout.on('data', (data) => {
-        console.log('Media Keys service: ' + data.toString());
-    });
-    spawned.on('exit', () => {
-        console.log('Media Keys quit!');
-    });
-    return spawned;
-}
+let serviceMediaKeys = spawn(LIBNODE, [__dirname + '/MediaKeys_service.js']);
+let serviceMPRISAndNotifications = spawn(LIBNODE, [__dirname + '/MPRISAndNotifications_service.js']);
+
+serviceMediaKeys.on('exit', () => {
+    console.log('MediaKeys service quit!');
+});
+
+serviceMPRISAndNotifications.stdout.on('data', (data)=>{
+    console.log(data.toString())
+});
+
+serviceMPRISAndNotifications.stderr.on('data', (data) => {
+    console.log(data.toString());
+})
+
+serviceMPRISAndNotifications.on("error", function(e) { 
+    console.log(e); 
+});
+
+serviceMPRISAndNotifications.on('exit', () => {
+    console.log('MPRIS & Notification service quit!');
+});
+let MediaKeys = new DBusInterpreter(serviceMediaKeys.stdout, null);
+let MPRISAndNotifications = new DBusInterpreter(serviceMPRISAndNotifications.stdout, serviceMPRISAndNotifications.stdin);
 
 module.exports = {
-    instances: {
-        MPRISAndNotifications: MPRISAndNotifications,
-        MediaKeys: MediaKeys
+    killall: () => {
+        process.kill(serviceMediaKeys.pid);
+        process.kill(serviceMPRISAndNotifications.pid);
     },
-    interpreter: interpreter,
-    reload: () => {
-	   MPRISAndNotifications = spawnMPRISAndNotificationService();
-       MediaKeys = spawnMediaKeyService();
+    services: {
+        MediaKeys: serviceMediaKeys,
+        MPRISAndNotifications: serviceMPRISAndNotifications
     },
-    quit: () => {
-        try {
-	       process.kill(MPRISAndNotifications.pid);
-           process.kill(MediaKeys.pid);
-           MPRISAndNotifications = null;
-           MediaKeys = null;
-	    } catch (e){}
-    }
+    MediaKeys: MediaKeys,
+    MPRISAndNotifications: MPRISAndNotifications,
 };

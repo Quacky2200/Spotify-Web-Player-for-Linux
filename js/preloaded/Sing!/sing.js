@@ -19,7 +19,7 @@ props.fs.readFile(__dirname + '/ui.html', function(err, data){
 	  button = `
 	  	<li>
 			<a id="nav-sing" style='padding: 5px' class="standard-menu-item disabled">
-			    <img src='data:image/png;base64,` + data + `' style='padding: 5px;height: 32px;margin: auto;display: block;opacity: 0.4;'/>
+			    <img src='data:image/png;base64,` + data + `' style='padding: 5px;height: 60%;margin: auto;display: block;opacity: 0.4;'/>
 				<span class="nav-text">Sing!</span>
 			</a>
 		</li>
@@ -38,10 +38,10 @@ props.fs.readFile(__dirname + '/ui.html', function(err, data){
 	    	if($('#sing-ui').length == 0){
 	    		$('#wrapper').prepend(ui);
 	    		$('#nav-sing').addClass('active');
-	    		singFuncs.load(controller.getTrackUri(), controller.getTrackName(), controller.getArtist());
+	    		singFuncs.load(controller.track.uri, controller.track.name, controller.track.artists);
 	    	} else {
 	    		singFuncs.toggleUI(!singFuncs.isOpen());
-	    		singFuncs.load(controller.getTrackUri(), controller.getTrackName(), controller.getArtist());
+	    		singFuncs.load(controller.track.uri, controller.track.name, controller.track.artists);
 	    	}
 	    });
 	    $('a[id*=\'nav-\']').not('#nav-sing').click(function(){
@@ -118,8 +118,12 @@ const singFuncs = {
 			$('#nav-sing').toggleClass('active');
 		});
 	},
-	enableButton: () => {
-		$('#nav-sing').removeClass('disabled');
+	toggleButton: (toggle) => {
+		if (toggle && $('#nav-sing').has('.disabled')){
+			$('#nav-sing').removeClass('disabled');
+		} else if (!toggle && !$('#nav-sing').has('.disabled')){
+			$('#nav-sing').addClass('disabled');
+		}
 	},
 	toggleUI: (toggle) => {
 		if(toggle) {

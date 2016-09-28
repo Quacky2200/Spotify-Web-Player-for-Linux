@@ -7,9 +7,15 @@ const Menu = props.electron.Menu;
 const tray = {
 	appIcon: null,
 	contextMenu: {
-		togglePlayback: {label: "Play/Pause", enabled: false, click: controller.playPause},
-		previous: {label: "Previous", enabled: false, click: controller.previous},
-		next: {label: "Next", enabled: false, click: controller.next},
+		togglePlayback: {label: "Play/Pause", enabled: false, click: () => {
+			controller.playPause()
+		}},
+		previous: {label: "Previous", enabled: false, click: () => {
+			controller.previous()
+		}},
+		next: {label: "Next", enabled: false, click: () => {
+			controller.next()
+		}},
 		toggleSpotifyAppearance: {label: "Hide Spotify", click: function(){
 			if (props.mainWindow.isVisible()){
 				props.mainWindow.hide();
@@ -40,7 +46,7 @@ const tray = {
 	},
 	toggleTray: function(toggle){
 		if (toggle && props.appSettings.ShowTray){
-			if (!tray.appIcon) tray.appIcon = new Tray(props.APP_ICON_SMALL);
+			if (!tray.appIcon) tray.appIcon = new Tray(props.APP_ICON_DIR + '/spotify-ico-small-' + props.appSettings.TrayIcon + '.png');
 			tray.appIcon.setContextMenu(Menu.buildFromTemplate([
 			    tray.contextMenu.togglePlayback,
 			    tray.contextMenu.previous,

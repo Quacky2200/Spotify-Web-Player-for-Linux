@@ -2,70 +2,19 @@
  * @author Matthew James <Quacky2200@hotmail.com>
  * MPRIS D-Bus Service
  */
-var request = require('request');
-var fs = require('fs');
-const interpreter = require('./dbus_interpreter');
-const notifications = require('freedesktop-notifications');
-notifications.setUnflood(true);
-let notification = notifications.createNotification({timeout: 15e4});
-function setupNotification(info){
-    notification.summary = (info.status == 'Playing' ? 'Now Playing' : info.status);
-    notification.body = info.activeSong.name.replace(/( - .*| \(.*)/i, '') + '\n' + 
-    info.activeSong.album.replace(/( - .*| \(.*)/i, '') + '\n' + 
-    info.activeSong.artists;
-    notification.icon = info.activeSong.art;
-}
 
 //Always make sure we're running as a proper name!
 process.title = 'spotifywebplayer';
-interpreter.handle(process.stdin, {
-    updateMpris: (info) => {
-        if (info.status == 'Stopped'){
-            player.playbackStatus = info.status;
-        } else {
-            player.metadata = {
-                'mpris:trackid': player.objectPath('track/' + info.activeSong.id),
-                'mpris:length': info.activeSong.length, // In microseconds
-                'mpris:artUrl': info.activeSong.art,
-                'xesam:title': info.activeSong.name.replace(/(\'| - .*| \(.*)/i, ''), //Remove long track titles
-                'xesam:album': info.activeSong.album.replace(/(\'| - .*| \(.*)/i, ''), //Remove long album names
-                'xesam:artist': info.activeSong.artists, 
-                'xesam:url': 'https://play.spotify.com/track/' + info.activeSong.uri
-            };
-            player.playbackStatus = info.status;
-            player.shuffle = info.shuffle;
-            player.repeat = info.repeat;
-        }
-    },
-    notify: (info) => {
-        var filepath = info.albumCache;
-        fs.access(filepath, fs.F_OK, (err) => {
-            if (err){
-                fs.mkdir(filepath, (err) => {
-                    if (err) console.log(err);
-                });
-            }
-        });
-        var file = (info.activeSong.art ? filepath + '/' + info.activeSong.album + '.jpeg' : process.cwd() + '/icons/spotify-web-player.png');
-        fs.access(file, fs.F_OK, function(err){
-            if (err){
-                request(info.activeSong.art, {encoding: 'binary'}, function(error, response, body) {
-                  if(error) console.log(error);
-                  fs.writeFile(file, body, 'binary', function (err) {
-                    if (err) return console.log(err);
-                    info.activeSong.art = file;
-                    setupNotification(info);
-                    notification.push();
-                  });
-                }); 
-            } else {
-                info.activeSong.art = file;
-                setupNotification(info);
-                notification.push();
-            }
-        });
-    }
-});
+
+var request = require('request');
+var fs = require('fs');
+
+const DBusInterpeter = require('./dbus_interpreter');
+var interpreter = new DBusInterpeter(process.stdin, process.stdout);
+
+const notifications = require('freedesktop-notifications');
+notifications.setUnflood(true);
+let notification = notifications.createNotification({timeout: 2e3});
 
 const Player = require('mpris-service');
 const player = Player({
@@ -75,22 +24,83 @@ const player = Player({
     supportedMimeTypes: ['application/www-url'],
     desktopEntry: 'spotifywebplayer'
 });
-function send(command, args){
-    console.log('Sending ' + command + ' event');
-    interpreter.send(process.stdout, command, args);
+
+
+function setupNotification(info){
+    notification.summary = (info.status == 'Playing' ? 'Now Playing' : info.status);
+    notification.body = info.track.name.replace(/( - .*| \(.*)/i, '') + '\n' + 
+        info.track.album.replace(/( - .*| \(.*)/i, '') + '\n' + 
+        info.track.artists;
+    notification.icon = info.track.art;
 }
+let lastURI = '';
+interpreter.on('updateMpris', function(info){
+    if (info.status == 'Stopped'){
+        player.playbackStatus = info.status;
+    } else {
+        if (info.track.uri && lastURI != info.track.uri){
+            player.metadata = {
+                'mpris:trackid': player.objectPath('track/' + info.track.id),
+                'mpris:length': info.track.length,
+                'mpris:artUrl': info.track.art,
+                'xesam:title': info.track.name.replace(/(\'| - .*| \(.*)/i, ''), //Remove long track titles
+                'xesam:album': info.track.album.replace(/(\'| - .*| \(.*)/i, ''), //Remove long album names
+                'xesam:artist': info.track.artists, 
+                'xesam:url': 'https://play.spotify.com/track/' + info.track.uri
+            };
+            lastURI = info.track.uri;
+        }
+        if (player.metadata['mpris:length'] != info.track.length) {
+            player.metadata['mpris:length'] = info.track.length;
+        }
+        if (info.track.uri) player.position = info.track.position;
+        if(player.playbackStatus != info.status) player.playbackStatus = info.status;
+        if(player.shuffle != info.shuffle) player.shuffle = info.shuffle;
+        if(player.repeat != info.repeat) player.repeat = info.repeat;
+    }
+});
 
-player.on('quit', () => {send('Quit')});
-player.on('raise', () => {send('Raise')});
+interpreter.on('notify', function(info){
+    if (!info.track.uri) return;
+    var filepath = (info.albumCacheDisabled ? '/tmp' : info.albumCache);
+    if (!info.albumCacheDisabled) fs.access(filepath, fs.F_OK, (err) => {
+        if (err){
+            fs.mkdir(filepath, (err) => {
+                if (err) console.log(err);
+            });
+        }
+    });
+    var file = (info.track.art ? filepath + '/' + info.track.album + '.jpeg' : process.cwd() + '/icons/spotify-web-player.png');
+    fs.access(file, fs.F_OK, function(err){
+        if (err){
+            request(info.track.art, {encoding: 'binary'}, function(error, response, body) {
+              if(error) console.log(error);
+              fs.writeFile(file, body, 'binary', function (err) {
+                if (err) return console.log(err);
+                info.track.art = file;
+                setupNotification(info);
+                notification.push();
+              });
+            }); 
+        } else {
+            info.track.art = file;
+            setupNotification(info);
+            notification.push();
+        }
+    }); 
+});
 
-player.on('playpause', () => {send('PlayPause')});
-player.on('play', () => {send('Play')});
-player.on('next', () => {send('Next')});
-player.on('previous', () => {send('Previous')});
-player.on('stop', () => {send('Stop')});
-player.on('seek', (Offset) => {send('Seek', {Offset:Offset})});
-player.on('position', (TrackID, Position) => {send('SetPosition', {TrackID:TrackID, Position:Position})});
-player.on('open', (Uri) => {send('OpenUri', {Uri:Uri})});
+player.on('quit', () => {interpreter.send('Quit')});
+player.on('raise', () => {interpreter.send('Raise')});
+
+player.on('playpause', () => {interpreter.send('PlayPause')});
+player.on('play', () => {interpreter.send('Play')});
+player.on('next', () => {interpreter.send('Next')});
+player.on('previous', () => {interpreter.send('Previous')});
+player.on('stop', () => {interpreter.send('Stop')});
+player.on('seek', (Offset) => {interpreter.send('Seek', {Offset:Offset})});
+player.on('position', (TrackID, Position) => {interpreter.send('SetPosition', {TrackID:TrackID, Position:Position})});
+player.on('open', (Uri) => {interpreter.send('OpenUri', {Uri:Uri})});
 
 //Make sure we stop when we get disconnected from the main process
 process.on('disconnect', function(){

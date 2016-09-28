@@ -1,4 +1,5 @@
 global.remote = require('electron').remote;
+let fs = require('fs');
 let props = remote.getGlobal('props');
 var AutoLaunch = require('auto-launch');
 let autolaunch = new AutoLaunch({
@@ -13,6 +14,19 @@ global.refresh = () => {
 	windowHook = false;
 	window.location.reload();
 }
+var deleteFolderRecursive = function(path) {
+  if( fs.existsSync(path) ) {
+    fs.readdirSync(path).forEach(function(file,index){
+      var curPath = path + "/" + file;
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
 document.onreadystatechange = function(){
 	window.$ = window.jQuery = require('../../preloaded/jquery');
 	var interface = require('../../preloaded/interface');
@@ -61,17 +75,41 @@ document.onreadystatechange = function(){
 		props.appSettings.save();
 		props.mainWindow.webContents.executeJavaScript('appMenu.toggleMenu(' + props.appSettings.ShowApplicationMenu + ')');
 	});
-
+	$('input[name*="AlbumCacheDisabled"]').change(function(){
+		props.appSettings.AlbumCacheDisabled = $(this).prop('checked');
+		props.appSettings.save();
+		props.mainWindow.webContents.executeJavaScript('controller.albumCacheDisabled = ' + props.appSettings.AlbumCacheDisabled + ';');
+	});
 	$('input[name*=\'NavBar\'], select').change(() => {
-		props.mainWindow.webContents.executeJavaScript('interface.load();interface.clean()');
-		interface.load();
-		interface.clean();
+		var i = 0;
+		var setTheme = setInterval(() => {
+			if(i > 5) clearInterval(setTheme);
+			i += 1;
+			props.mainWindow.webContents.executeJavaScript('interface.load();interface.clean()');
+			interface.load();
+			interface.clean();
+		}, 1500);
 	});
 
-	$('select').change(function(){
+	$('select[name=\'Theme\']').change(function(){
 		props.appSettings.Theme = $(this).val();
 		props.appSettings.save();
 	});
-	$('select').val(props.appSettings.Theme);
+	$('select[name=\'TrayIcon\']').change(function(){
+		props.appSettings.TrayIcon = $(this).val();
+		props.mainWindow.webContents.executeJavaScript('tray.toggleTray(false);tray.toggleTray(true);');
+		props.appSettings.save();
+	});
+	
+	$('select[name=\'Theme\']').val(props.appSettings.Theme);
+	$('select[name=\'TrayIcon\']').val(props.appSettings.TrayIcon);
+
+	$('a.clean-album-cache').click(() => {
+		deleteFolderRecursive(props.albumCache);
+	});
+
+	$('a.clean-lyric-cache').click(() => {
+		deleteFolderRecursive(props.lyricCache);
+	});
 };
 
