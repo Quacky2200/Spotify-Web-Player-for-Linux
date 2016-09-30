@@ -1,5 +1,7 @@
 ![Spotify - Logged In](https://cloud.githubusercontent.com/assets/4623599/14404283/bd6f7d9c-fe69-11e5-9588-628248c25dfc.png)
 # Spotify Web Player for Linux
+
+[![Join the chat at https://gitter.im/SWP4L/Lobby](https://badges.gitter.im/SWP4L/Lobby.svg)](https://gitter.im/SWP4L/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 An Electron wrapper of Spotify Web Player to increase desktop integration for a stable Spotify Player for Linux replacement
 
 ## Functionality
