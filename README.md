@@ -20,9 +20,9 @@ An Electron wrapper of Spotify Web Player to increase desktop integration for a 
 * Mix-&-Match tray icons to your DE/Icon preferences
 
 ##Screenshots
-![Notifications](https://cloud.githubusercontent.com/assets/4623599/18899796/8c8e62d2-8533-11e6-831a-38fae1b627ba.png)
 ![Tray Icon](https://cloud.githubusercontent.com/assets/4623599/17799675/63a4c57e-65d4-11e6-8363-30a41ed7f67e.png)
 ![Controls in the Ubuntu Sound Menu](https://cloud.githubusercontent.com/assets/4623599/18899621/44c10b18-8532-11e6-9783-26756b511a6d.png)
+![Notifications](https://cloud.githubusercontent.com/assets/4623599/18899796/8c8e62d2-8533-11e6-831a-38fae1b627ba.png)
 ![Non-intrustive Adverts](https://cloud.githubusercontent.com/assets/4623599/17799728/db82909e-65d4-11e6-98b3-ecccaf8de53a.png)
 ![Sing! A MusixMatch lyric integrated into the application](https://cloud.githubusercontent.com/assets/4623599/18258206/39226510-73c9-11e6-85c3-b58279fb88a1.png)
 ![Light theme](https://cloud.githubusercontent.com/assets/4623599/18234249/1b5d019e-72f6-11e6-835d-4b63a24eb920.png)
@@ -68,6 +68,11 @@ Create Application Icon & Application Launcher
 ```
 cp /usr/bin/spotifywebplayer/icons/spotify.png /usr/share/pixmaps/ && echo "[Desktop Entry]\nVersion=1.0.0\nName=Spotify Web Player\nComment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.\nExec=bash /usr/bin/spotifywebplayer/spotifywebplayer\nPath=/usr/bin/spotifywebplayer\nIcon=spotify\nCategories=GNOME;GTK;AudioVideo;Audio;Player;\nActions=PlayPause;Next;Previous;\nType=Application\nTerminal=false\n[Desktop Action PlayPause]\nName=Play/Pause\nExec=dbus-send --print-reply --reply-timeout=2500 --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause\n[Desktop Action Next]\nName=Next\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next\n[Desktop Action Previous]\nName=Previous\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 ```
+Make application launchable
+```
+chmod +x /usr/share/applications/spotifywebplayer.desktop && chmod +x /usr/bin/spotifywebplayer/spotifywebplayer
+```
+Launch the application with `gtk-launch spotifywebplayer` or `bash /usr/bin/spotifywebplayer/spotifywebplayer`
 
 ## Requirements
 libappindicator1, libnotify4, wget, unzip, dbus
