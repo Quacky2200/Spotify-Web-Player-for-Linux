@@ -3,40 +3,59 @@
  * Controller for the player
  */
 const EventEmitter = require('events');
+const childProcess = require('child_process');
+const spawn = childProcess.spawn;
 
 class Controller extends EventEmitter {
 	constructor (player) {
 		super();
 
-		var dbus = (process.platform == 'linux' ? require('./../backend/dbus_implementation') : null);
+		var dbus = process.platform == 'linux';
 
-		if(dbus){
+		if (dbus){
+			//Setup the service
+			const LIBNODE = process.cwd() + '/libs/node/bin/node';
+			const DBusInterpreter = require('./D-Bus/interpreter');
+			const service = spawn(LIBNODE, [__dirname + '/D-Bus/services.js']);
+			service.on('exit', () => {
+			    console.log('D-Bus services have died');
+			})
+			service.stdout.on('data', (data) => {
+				//console.log(data.toString());
+			});
+			service.stderr.on('data', (data) => {
+				console.error(data.toString())
+			});
+			service.on('error', (e) => {
+				console.error(e.toString())
+			});
+			//Setup a new interpreter
+			dbus = {
+				interpreter: new DBusInterpreter(service.stdout, service.stdin),
+				stopService: () => {
+					process.kill(service.pid)
+				}
+			}
+
 			//Attach DBus interaction 
-			dbus.MediaKeys.on('PlayPause', this.playPause);
-			dbus.MediaKeys.on('Next', this.next);
-			dbus.MediaKeys.on('Previous', this.previous);
-
-			dbus.MPRISAndNotifications.on('Quit', () => {
-				this.emit('Quit');
-			});
-			dbus.MPRISAndNotifications.on('Raise', () => {
-				this.emit('Raise');
-			});
-			dbus.MPRISAndNotifications.on('Play', this.play);
-			dbus.MPRISAndNotifications.on('PlayPause', this.playPause);
-			dbus.MPRISAndNotifications.on('Previous', this.previous);
-			dbus.MPRISAndNotifications.on('Next', this.next);
-			dbus.MPRISAndNotifications.on('Stop', this.stop);
-			dbus.MPRISAndNotifications.on('openUri', (uri) => {console.log('openUri not implemented (uri = \'' + uri + '\')')});
+			dbus.interpreter.on('Play', this.play);
+			dbus.interpreter.on('PlayPause', this.playPause);
+			dbus.interpreter.on('Next', this.next);
+			dbus.interpreter.on('Previous', this.previous);
+			dbus.interpreter.on('Stop', this.stop);
+			dbus.interpreter.on('openUri', (uri) => {console.log('openUri not implemented (uri = \'' + uri + '\')')});
+			dbus.interpreter.on('Quit', () => { this.emit('Quit'); });
+			dbus.interpreter.on('Raise', () => { this.emit('Raise'); });
+			
 		}
 
 		var updateMpris = () => {
-			if(dbus) dbus.MPRISAndNotifications.send('updateMpris', this)
+			if(dbus) dbus.interpreter.send('updateMpris', this)
 		};
 
 		this.sendNotification = () => {
 			if(dbus) {
-				dbus.MPRISAndNotifications.send("notify", this);
+				dbus.interpreter.send("notify", this);
 				//Suport OS X & Windows with other notification systems
 			} else {
 				new Notification(
@@ -49,20 +68,22 @@ class Controller extends EventEmitter {
 			}
 		};
 		this.stopService = () => {
-			dbus.killall();
+			dbus.stopService();
 		};
 		var update = (details) => {
-			//If we have a current track loaded and the track is different, or if we have never stored a track before, it's a trackChange
-			var trackChange = (!this.track && details.track) || (details.track && this.track.uri != details.track.uri.replace('spotify:track:', ''));
-			//If we are not playing and there's no track, we have reached the end of the queue, otherwise we have either paused or we're playing
-			var currentPlayback = (details.playing ? 'Playing' : (details.track == null ? 'Stopped' : 'Paused'));
-			var playbackChange = this.status != currentPlayback;
-			this.status = currentPlayback;
-			this.shuffled = details.shuffle;
-			this.repeat = (details.repeat == 0 ? 'None' : (details.repeat == 1 ? 'Playlist' : 'Track'));
+			var trackChange, 
+				playbackChange;
+			//If we are listening to a track
 			if(details.track){
+				var currentPlayback = (details.playing ? 'Playing' : 'Paused');
 				if(!this.track) this.track = {};
-				//If we have a track, update the information for it
+				this.isAdvertisement = false;
+
+				trackChange = this.track.uri != details.track.uri.replace('spotify:track:', '');
+				playbackChange = this.status != currentPlayback;
+
+				this.status = currentPlayback;
+				//If we have a track, update the information for it (position update and track change)
 				this.track.id = details.track.number;
 				this.track.disc = details.track.disc;
 				this.track.uri = details.track.uri.replace('spotify:track:', '');
@@ -73,15 +94,42 @@ class Controller extends EventEmitter {
 				this.track.length = details.duration * 1000; //Must be in Microseconds (from milliseconds)
 				this.track.position = details.position * 1000;
 				this.track.art = details.track.images[0][1]; //Retrieve the smallest image as our album art
+				this.track.url = 'https://play.spotify.com/track/' + this.track.uri;
+				this.shuffled = details.shuffle;
+				this.repeat = (details.repeat == 0 ? 'None' : (details.repeat == 1 ? 'Playlist' : 'Track'));
+
+			} else if (details.type == 'AD_BREAK_CHANGED') {
+				var currentPlayback = (details.params.playing ? 'Playing' : 'Paused');
+
+				trackChange = !!this.track.uri;
+				playbackChange = this.status != currentPlayback;
+				this.status = currentPlayback;
+				this.isAdvertisement = true;
+				this.track.id = 0; 
+				this.track.disc = 1;
+				this.track.uri = null;
+				this.track.name = details.params.title;
+				this.track.album = details.params.description;
+				this.track.popularity = 1;
+				this.track.artists = 'Spotify';
+				this.track.art = details.params.imageUrl;
+				this.track.url = details.params.clickUrl;
+				this.track.position = details.params.position * 1000;
+				this.track.length = details.params.duration * 1000;
+			} else {
+				playbackChange = this.status != 'Stopped';
+				this.status = 'Stopped';
 			}
+
 			updateMpris();
 			if(trackChange || playbackChange) this.emit((trackChange ? 'track' : 'playback') + 'Change', this);
 		};
 
 		player.contentWindow.addEventListener('message', (e) => {
-			if(e.data.indexOf('payload') > 0){
+			//Make sure to only try and update the information if we have a payload containing data (an object/associative array)
+			if(e.data.match(/\"payload\":{/)){
 				var obj = JSON.parse(e.data);
-				if (obj.payload.event){
+				if (obj.payload.type == "ads_break_change" || obj.payload.type == 'change'){
 					update(obj.payload.data);
 				} else if (obj.payload.track){
 					update(obj.payload);

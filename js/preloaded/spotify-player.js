@@ -3,13 +3,13 @@
  * Spotify Player Injection tool
  * Allows for Spotify Web Player for Linux to implement native-like features
  */
-global.user = require('./user');
-global.appSettings = props.appSettings;
-global.controller = null;
-global.tray = require('./tray');
-global.interface = require('./interface');
-global.sing = require('./Sing!/sing');
-global.appMenu = require('./window-menu');
+window.user = require('./user');
+window.appSettings = props.appSettings;
+window.controller = null;
+window.tray = require('./tray');
+window.interface = require('./interface');
+window.sing = require('./Sing!/sing');
+window.appMenu = require('./window-menu');
 /**
  * Update controls according to login/control status
  */
@@ -36,8 +36,6 @@ window.onbeforeunload = function(e) {
 };
 setInterval(() => {
 	if($('#modal-notification-area').is(':visible')) {
-		tray.toggleTray(false);
-		appMenu.toggleMenu(false);
 		windowHook = false;
 		window.location.reload();
 	}
@@ -70,6 +68,7 @@ window.addEventListener('message', function(event){
 				props.mainWindow.focus();
 			});
 			controller.on('trackChange', (controller) => {
+				sing.toggleButton(true);
 				sing.load(controller.track.uri, controller.track.name, controller.track.artists);
 				if(isFocusWorthy() && props.appSettings.Notifications.ShowTrackChange) controller.sendNotification();
 			});

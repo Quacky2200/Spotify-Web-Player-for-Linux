@@ -32,5 +32,8 @@ document.onreadystatechange = function(){
 		props.aboutWindow.hide();
 		return false;
 	};
+	setInterval(() => {
+		$('#memoryusage').text('MEM: ' + (props.process.getProcessMemoryInfo().workingSetSize / 1000) + 'MB');
+	}, 5000);
 };
 

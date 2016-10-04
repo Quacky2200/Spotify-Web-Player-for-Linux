@@ -1,5 +1,6 @@
 //Elements
 let ui, navButton, timeButton, timer;
+let mxm = require('node-unofficialmxm');
 //Load UI Element first
 props.fs.readFile(__dirname + '/ui.html', function(err, data){
 	if(err) console.log(err);
@@ -61,6 +62,7 @@ function toggleLyricScroller(toggle){
 	}
 }
 const singFuncs = {
+	lastResult: null,
 	load: (trackURI, trackName, trackArtist) => {
 		//Make lyrics cache if it doesn't exist
 		props.fs.access(props.lyricCache, props.fs.F_OK, (err) => {
@@ -77,16 +79,22 @@ const singFuncs = {
 			props.fs.access(filepath, props.fs.F_OK, (err, data) => {
 				if (err){
 					//Either exists or corrupt, let's get it again
-					props.mxm(trackName, trackArtist, (err, result) => {
+					mxm(trackName, trackArtist, (err, result) => {
+						singFuncs.lastResult = result;
 						singFuncs.hideLoader();
 						if (err){
 							console.log(err);
 							$('#sing-ui #sing-container').html("<main class='centerstage'><div><h1>Sorry, I couldn't find the lyrics to this song.</h1><h4>(" + err + ")</h4></div></main>");
 						} else {
-							lyrics = "<div id='lyrics'><h1>" + result.title + "</h1><h2>" + result.artists.join(', ') + "</h2><div>" + result.lyrics.replace(/\n/g, '<br/>') + "</div><br/><br/><p>Lyrics from MusixMatch, using <a href='https://github.com/Quacky2200/node-unofficialmxm'>node-unofficialmxm</a></p></div>";
+							console.log(JSON.stringify(result));
+							lyrics = "<div id='lyrics'><h1>" + result.name + "</h1><h2>" + result.artists + "</h2><div>" + result.lyrics.replace(/\n/g, '<br/>') + "</div><br/><br/><p><a href='" + result.url + "'>View on MusixMatch</a><br>Last Updated: " + (new Date(Date.parse(result.updatedTime)).toLocaleString()) + "<br/>Lyrics from MusixMatch, using <a href='https://github.com/Quacky2200/node-unofficialmxm'>node-unofficialmxm</a></p></div>";
 							props.fs.writeFile(filepath, lyrics, (err) => {
 								if (err) console.log(err);
 								$('#sing-ui #sing-container').html(lyrics);
+								$('#sing-ui #sing-container a').click(function(){
+									props.electron.shell.openExternal($(this).attr('href'));
+									return false;
+								});
 							});
 						}
 					});

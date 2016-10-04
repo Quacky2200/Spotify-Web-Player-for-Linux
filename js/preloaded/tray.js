@@ -17,29 +17,29 @@ const tray = {
 			controller.next()
 		}},
 		toggleSpotifyAppearance: {label: "Hide Spotify", click: function(){
-			if (props.mainWindow.isVisible()){
+			var prefix;
+			if (props.mainWindow.isVisible() && !props.mainWindow.isMinimized()){
+				prefix = 'Show';
 				props.mainWindow.hide();
 			} else {
+				prefix = 'Hide';
 				props.mainWindow.show();
 				props.mainWindow.focus();
 			}
-			tray.contextMenu.toggleSpotifyAppearance.label = (props.mainWindow.isVisible() ? 'Show' : 'Hide') + ' Spotify';
-			tray.toggleTray(true);
+			tray.contextMenu.toggleSpotifyAppearance.label = prefix + ' Spotify';
+			tray.toggleTray(props.appSettings.ShowTray);
 		}},
 		appPreferences: {label: "App Preferences", click: function(){
 			props.preferencesWindow.show();
 			props.preferencesWindow.focus();
 		}},
-		toggleNotifications: {label: "Disable Notifications", click:function(){
-	    	props.preferences.notifications = (props.preferences.notifications ? false : true);
-	    	tray.contextMenu.toggleNotifications.label = (props.preferences.notifications ? "Disable" : "Enable") + " Notifications";
-	    	tray.toggleTray(true);
-	    }},
 	    logout: {label: "Logout", click: function(){
 	    	user.logout();
 	    }},
 	    quit: {label: "Quit", click:function(){
 	    	tray.toggleTray(false);
+	    	appMenu.toggleMenu(false);
+			controller.stopService();
 			windowHook = false;
 			props.electron.app.quit();
 	    }}
@@ -57,6 +57,10 @@ const tray = {
 			    tray.contextMenu.logout,
 			    tray.contextMenu.quit 
 			]));
+			tray.appIcon.on('click', () => {
+				props.mainWindow.show();
+				props.mainWindow.focus();
+			});
 		} else if (!toggle && tray.appIcon != null){
 			tray.appIcon.destroy();
 	    	tray.appIcon = null;
@@ -72,7 +76,7 @@ const tray = {
 	}
 };
 document.addEventListener("visibilitychange", function(){
-	tray.contextMenu.toggleSpotifyAppearance.label = (props.mainWindow.isVisible() ? 'Hide' : 'Show') + ' Spotify';
-	tray.toggleTray(true);
+	tray.contextMenu.toggleSpotifyAppearance.label = (props.mainWindow.isMinimized() || !props.mainWindow.isVisible() ? 'Show' : 'Hide') + ' Spotify';
+	tray.toggleTray(props.appSettings.ShowTray);
 });
 module.exports = tray;

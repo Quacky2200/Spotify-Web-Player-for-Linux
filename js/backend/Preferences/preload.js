@@ -51,7 +51,7 @@ document.onreadystatechange = function(){
 			}
 		}
 	}
-	recursivelySetupSettings(props.appSettings, ['Theme']);
+	recursivelySetupSettings(props.appSettings, ['Theme', 'AlbumCacheDisabled']);
 
 	$('input[name=\'StartOnLogin\']').change(function(){
 		if (props.process.platform == 'linux'){
@@ -76,10 +76,11 @@ document.onreadystatechange = function(){
 		props.mainWindow.webContents.executeJavaScript('appMenu.toggleMenu(' + props.appSettings.ShowApplicationMenu + ')');
 	});
 	$('input[name*="AlbumCacheDisabled"]').change(function(){
-		props.appSettings.AlbumCacheDisabled = $(this).prop('checked');
+		props.appSettings.AlbumCacheDisabled = !$(this).prop('checked');
 		props.appSettings.save();
 		props.mainWindow.webContents.executeJavaScript('controller.albumCacheDisabled = ' + props.appSettings.AlbumCacheDisabled + ';');
 	});
+
 	$('input[name*=\'NavBar\'], select').change(() => {
 		var i = 0;
 		var setTheme = setInterval(() => {
@@ -100,7 +101,7 @@ document.onreadystatechange = function(){
 		props.mainWindow.webContents.executeJavaScript('tray.toggleTray(false);tray.toggleTray(true);');
 		props.appSettings.save();
 	});
-	
+	if(!props.appSettings.AlbumCacheDisabled) $('input[name*="AlbumCacheDisabled"]').attr('checked', 'true');
 	$('select[name=\'Theme\']').val(props.appSettings.Theme);
 	$('select[name=\'TrayIcon\']').val(props.appSettings.TrayIcon);
 

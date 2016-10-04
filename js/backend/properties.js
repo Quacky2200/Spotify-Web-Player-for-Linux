@@ -43,17 +43,15 @@ module.exports = function(electron){
         NAME: 'Spotify Web Player',
         fs: fs,
         os: os,
-        electron: electron, 
-        mxm: require('node-unofficialmxm'),// - Sadly MusixMatch use captcha to prevent bots :(,
+        electron: electron,
         lyricCache: home + '/.spotifywebplayer/LyricCache',
         albumCache: home + '/.spotifywebplayer/AlbumCache',
         process: process,
         console: console,
-        APP_ICON: __dirname + '/../../icons/spotify-web-player.png',
+        APP_ICON: __dirname + '/../../icons/spotify.png',
         APP_ICON_DIR: __dirname + '/../../icons',
         userhome: home,
         appSettings: appSettings,
-        globalShortcut: electron.globalShortcut,
         APP_DIR: home + '/.spotifywebplayer',
         HOST: 'https://play.spotify.com',
         VERSION: electron.app.getVersion(),
@@ -157,6 +155,11 @@ module.exports = function(electron){
             });
             mainWindow.on('page-title-updated', function(event){
                 event.preventDefault();
+            });
+            mainWindow.on('closed', () => {
+                console.log('I think I should quit?');
+                electron.app.quit();
+                process.exit(0);
             });
             mainWindow.setMenu(null);
             mainWindow.webContents.on('new-window', function(event, url, name, disposition){
