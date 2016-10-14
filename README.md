@@ -34,7 +34,7 @@ Check out the [Releases](https://github.com/Quacky2200/Spotify-Web-Player-for-Li
 ##### Arch and other Linux users will need to make sure libappindicator-1 and libnotify4 (or alternative desktop environment packages) are installed that Electron will be able to use!
 Debian/Ubuntu/Linux Mint
 ```
-sudo apt-get install libappindicator-1 libnotify4 
+sudo apt-get install libappindicator1 libnotify4 
 ```
 ## Manual Install
 
