@@ -42,7 +42,7 @@ sudo apt-get install libappindicator1 libnotify4
 
 Make the appropriate directories
 ```
-mkdir -p /usr/bin/spotifywebplayer/lib/electron && mkdir /usr/bin/spotifywebplayer/node_modules
+mkdir -p /usr/bin/spotifywebplayer/libs/electron && mkdir /usr/bin/spotifywebplayer/node_modules
 ```
 Download the archive from GitHub
 ```
@@ -66,7 +66,7 @@ wget https://github.com/Quacky2200/Spotify-Web-Player-for-Linux/releases/downloa
 ```
 Create Application Icon & Application Launcher
 ```
-cp /usr/bin/spotifywebplayer/icons/spotify.png /usr/share/pixmaps/ && echo "[Desktop Entry]\nVersion=1.0.0\nName=Spotify Web Player\nComment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.\nExec=bash /usr/bin/spotifywebplayer/spotifywebplayer\nPath=/usr/bin/spotifywebplayer\nIcon=spotify\nCategories=GNOME;GTK;AudioVideo;Audio;Player;\nActions=PlayPause;Next;Previous;\nType=Application\nTerminal=false\n[Desktop Action PlayPause]\nName=Play/Pause\nExec=dbus-send --print-reply --reply-timeout=2500 --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause\n[Desktop Action Next]\nName=Next\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next\n[Desktop Action Previous]\nName=Previous\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+cp /usr/bin/spotifywebplayer/icons/spotify.png /usr/share/pixmaps/ && printf "[Desktop Entry]\nVersion=1.0.0\nName=Spotify Web Player\nComment=Music for every moment. Spotify is a digital music service that gives you access to millions of songs.\nExec=bash /usr/bin/spotifywebplayer/spotifywebplayer\nPath=/usr/bin/spotifywebplayer\nIcon=spotify\nCategories=GNOME;GTK;AudioVideo;Audio;Player;\nActions=PlayPause;Next;Previous;\nType=Application\nTerminal=false\n[Desktop Action PlayPause]\nName=Play/Pause\nExec=dbus-send --print-reply --reply-timeout=2500 --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause\n[Desktop Action Next]\nName=Next\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next\n[Desktop Action Previous]\nName=Previous\nExec=dbus-send --print-reply --session --dest=org.mpris.MediaPlayer2.spotifywebplayer /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous" > /usr/share/applications/spotifywebplayer.desktop
 ```
 Make application launchable
 ```
