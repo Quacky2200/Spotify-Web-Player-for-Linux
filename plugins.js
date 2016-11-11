@@ -1,3 +1,5 @@
+const path = require("path")
+
 /**
  * @author Matthew James <Quacky2200@hotmail.com>
  * Plugins insertion function
@@ -22,7 +24,7 @@ module.exports = function(app){
 			console.log('No available flash plugin can be used for this platform. Exiting...');
  			process.exit(1);
  	}
-	app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname}/plugins/${pluginName}`);
+	app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname.replace(`${path.sep}app.asar`, '')}/plugins/${pluginName}`);
 	//Optionally specify flash version, for example, v17.0.0.169
 	//app.commandLine.appendSwitch('ppapi-flash-version', '20.0.0.306');
 	//These may be necessary when Spotify decides to move to pure HTML5 DRM

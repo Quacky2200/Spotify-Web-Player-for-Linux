@@ -19,7 +19,7 @@ if (typeof electron == 'string'){
 	 });
 	//process.exit(0);
 } else if (typeof electron == 'object' && electron.app){
-	require('./app/app');
+	require('./app');
 } else {
  	console.log('Cannot start up. Exiting...');
 	process.exit(-1);
