@@ -1,0 +1,50 @@
+body{background: #121314; color: #88898c; }
+body > iframe {display:none} /*Spotify bridge iframe...?*/
+body.about, body.preferences{font-family: sans-serif; font-weight: 300;}
+body.about a, 
+body.preferences a, 
+body.about a:link,
+body.preferences a:link,
+body.about a:active,
+body.preferences a:active,
+body.about a:visited
+body.preferences a:visited{
+    color: #84bd00;
+    transition: all 500ms;
+    text-underline: none;
+}
+body.about a:hover,
+body.preferences a:hover{
+    color:#dfe0e6;
+}
+:not(#player) a(.btn),
+:not(#player) a:link:not(.btn), 
+:not(#player) a:not(.btn):active,
+:not(#player) a:not(.btn):visited, 
+:not(#player) a:not(.btn):hover{color: #444444;}
+::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgb(28, 28, 31);
+}
+::-webkit-scrollbar-corner {
+    background-color: rgb(28, 28, 31);
+}
+::-webkit-scrollbar-thumb {
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    background-color: rgb(50, 52, 56);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(28, 28, 31);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+    background-color: rgb(28, 28, 31);
+}

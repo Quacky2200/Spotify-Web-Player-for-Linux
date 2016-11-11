@@ -1,0 +1,92 @@
+<div id='sing-ui'>
+	<div id='sing-container'>
+		<main class='centerstage'><div><div class='loader'></div></div></main>
+	</div>
+	<div>
+		<a href='javascript:;'><img id='timeButton' src=''/></a>
+	</div>
+	<style>
+		#sing-ui{
+		    width: calc(100% - (250px + 90px));
+		    position: absolute;
+		    background: rgba(0,0,0,0.90);
+		    height: 100%;
+		    top: 0;
+		    left: 90px;
+		    right: 250px;
+		    z-index: 100;
+		    text-align: center;
+		    font-size: 2.25vw;
+		    line-height: 2.5vw;
+		    font-weight: 300;
+		    overflow-x: hidden;
+		    overflow-y: scroll
+		    transition: all 1s linear;
+		}
+		#sing-container{
+			position: relative;
+		    width: 100%;
+		    height: 100%;
+		    display: block;
+		}
+		main.centerstage{display:table;text-align:center;width:100%;height:100%;}
+		main.centerstage > *{display:table-cell;vertical-align:middle;}
+		.loader:before,
+		.loader:after,
+		.loader {
+		  border-radius: 50%;
+		  width: 2.5em;
+		  height: 2.5em;
+		  -webkit-animation-fill-mode: both;
+		  animation-fill-mode: both;
+		  -webkit-animation: load7 1.8s infinite ease-in-out;
+		  animation: load7 1.8s infinite ease-in-out;
+		}
+		.loader {
+		  color: #ffffff;
+		  font-size: 10px;
+		  margin: 80px auto;
+		  position: relative;
+		  text-indent: -9999em;
+		  -webkit-transform: translateZ(0);
+		  -ms-transform: translateZ(0);
+		  transform: translateZ(0);
+		  -webkit-animation-delay: -0.16s;
+		  animation-delay: -0.16s;
+		}
+		.loader:before {
+		  left: -3.5em;
+		  -webkit-animation-delay: -0.32s;
+		  animation-delay: -0.32s;
+		}
+		.loader:after {
+		  left: 3.5em;
+		}
+		.loader:before,
+		.loader:after {
+		  content: '';
+		  position: absolute;
+		  top: 0;
+		}
+		@-webkit-keyframes load7 {
+		  0%,
+		  80%,
+		  100% {
+		    box-shadow: 0 2.5em 0 -1.3em;
+		  }
+		  40% {
+		    box-shadow: 0 2.5em 0 0;
+		  }
+		}
+		@keyframes load7 {
+		  0%,
+		  80%,
+		  100% {
+		    box-shadow: 0 2.5em 0 -1.3em;
+		  }
+		  40% {
+		    box-shadow: 0 2.5em 0 0;
+		  }
+		}
+	</style>
+</div>

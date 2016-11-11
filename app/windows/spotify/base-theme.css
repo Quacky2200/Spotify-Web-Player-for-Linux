@@ -1,0 +1,27 @@
+#notification-area{display:none;}
+
+#cookie-compliance{display:none !important;}
+#header #appName{height: 0;overflow: hidden;display:none !important;}
+#now-playing-widgets{display:none !important;}
+.etched-top::before{background-color:#343434 !important;}
+html, body{width: 100%;height:100%;border:0 !important;margin:0;padding:0;}
+.ads-leaderboard-container{display:none !important;}
+/*#window_advert{position: fixed; display:none;height:100%;width:100%;background:rgba(0,0,0,0.75);z-index:10000}
+:not(#advert) > #hpto-container{display:none;}
+#window_advert_container{display:table;position:relative;width:100%;height:100%}
+#advert_container{display:table-cell;vertical-align:middle;text-align:center}
+#advert{position:relative;text-align:right;display:inline-block;border-radius:10px;overflow:hidden;min-height:240px;min-width: 800px;max-width: 75%;}
+#advert a, #advert a:hover, #advert a:active, #advert a:visited{display:block;position:absolute;width:100%;height:100%;left:0;top:0;border:none;text-decoration: none}
+#advert #hpto-container .hpto-button{background:rgba(0,0,0,0.75);padding:5px;display:inline-block;border-radius:5px;margin:10px;}
+#advert #hpto-container{position:relative;display: inline-block; width: 900px;height: 270px;background-size: cover;}
+#window_advert #advert #hpto-container iframe {background-color: none !important}
+*/
+div.upperLeft{position: initial !important;height: auto !important;left: initial !important;right: initial !important;}
+div.section-divider{margin-top: 25px !important ;}
+#hpto-container{animation: advertisementSlide 1s; animation-delay: 2s; animation-timing-function: linear; transform-origin: center bottom;}
+
+@keyframes advertisementSlide{
+    from {transform: scale(1, 0);}
+    to {transform:scale(1,1);}
+}
+
