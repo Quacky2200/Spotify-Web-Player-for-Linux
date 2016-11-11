@@ -1,11 +1,31 @@
 {
   "name": "spotifywebplayer",
-  "productName": "Spotify Web Player",
+  "productName": "Spotify Web Player for Linux",
   "version": "1.0.25",
   "description": "An Electron wrapper of Spotify Web Player to increase desktop integration for a stable Spotify Player for Linux replacement",
   "main": "main.js",
+  "postinstall": "install-app-deps",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "asar": {
+      "unpack": "**/D-Bus/**/*"
+    },
+    "files": ["**/*", "!spotifywebplayer", "!*.md", "!*.sh"],
+    "extraResources": "plugins/libpepflashplayer-${arch}.so",
+    "linux": {
+      "synopsis": "An Electron wrapper of Spotify Web Player to increase desktop integration for a stable Spotify Player for Linux replacement",
+      "category": "Audio",
+      "packageCategory": "GNOME;GTK;AudioVideo;Audio;Player",
+      "depends": ["libappindicator1", "libindicator7", "libnotify4", "notify-osd", "wget", "unzip", "tar"],
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
   },
   "repository": {
     "type": "git",
@@ -15,14 +35,17 @@
     "play",
     "music"
   ],
-  "author": "Quacky2200",
+  "author": {
+    "name": "Matthew James",
+    "email": "Quacky2200@hotmail.com",
+    "url": "https://github.com/Quacky2200"
+  },
   "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/Quacky2200/spotify-web-player-for-linux"
   },
   "homepage": "https://github.com/Quacky2200/spotify-web-player-for-linux",
   "dependencies": {
-    "electron": "1.4.6",
     "auto-launch": "^4.0.0",
     "dbus": "^0.2.19",
     "electron-cookies": "^1.1.0",
@@ -30,5 +53,9 @@
     "mpris-service": "^1.1.1",
     "node-unofficialmxm": "git+https://github.com/Quacky2200/node-unofficialmxm.git",
     "request": "^2.74.0"
+  },
+  "devDependencies": {
+    "electron": "1.4.6",
+    "electron-builder": "next"
   }
 }
