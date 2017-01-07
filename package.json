@@ -23,7 +23,8 @@
       "depends": ["libappindicator1", "libindicator7", "libnotify4", "notify-osd", "wget", "unzip", "tar"],
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "zip"
       ]
     }
   },
