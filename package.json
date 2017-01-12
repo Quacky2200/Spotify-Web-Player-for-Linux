@@ -11,9 +11,10 @@
     "dist": "build"
   },
   "build": {
-    "asar": {
-      "unpack": "**/D-Bus/**/*"
-    },
+    "asarUnpack": [
+      "windows/spotify/D-Bus",
+      "node_modules/mpris-service"
+    ],
     "files": ["**/*", "!spotifywebplayer", "!*.md", "!*.sh"],
     "extraResources": "plugins/libpepflashplayer-${arch}.so",
     "linux": {
