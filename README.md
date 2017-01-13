@@ -31,12 +31,20 @@ An Electron wrapper of Spotify Web Player to increase desktop integration for a 
 Check out the [Releases](https://github.com/Quacky2200/Spotify-Web-Player-for-Linux/releases) page.
 
 #### If you cannot find a release, don't worry! It's easy to use with a few simple *linux only* commands...
-##### Arch and other Linux users will need to make sure libappindicator-1 and libnotify4 (or alternative desktop environment packages) are installed that Electron will be able to use!
+
 Debian/Ubuntu/Linux Mint
 ```
 sudo apt-get install libappindicator1 libnotify4 
 ```
+Arch and Arch derivatives (*AUR packages maintained by twa022*)
+
+**stable: https://aur.archlinux.org/packages/spotify-web-player/**
+
+**development: https://aur.archlinux.org/packages/spotify-web-player-git/**
+
 ## Manual Install
+
+##### Please make sure that libappindicator-1, dbus and libnotify4 packages are installed
 
 **These commands require root priviledges (e.g. `sudo su`, `su root`)**
 
