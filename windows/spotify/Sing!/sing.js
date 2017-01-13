@@ -2,11 +2,11 @@
 let ui, navButton, timeButton, timer;
 let mxm = props.mxm;
 //Load UI Element first
-props.fs.readFile(`${__dirname}/ui.html`, function(err, data){
+props.getUTF8File(`${__dirname}/ui.html`, function(err, data){
 	if(err) console.log(err);
 	ui = data.toString();
 	//Load the timer icon
-	props.fs.readFile(`${__dirname}/time.png`, {encoding: 'base64'}, function(err, data){
+	props.getImageFileAsBase64(`${__dirname}/time.png`, function(err, data){
 		if(err) console.log(err);
 		$('#sing-ui #timeButton').attr('src', `data:image/png;base64,${data}`);
 		$('#sing-ui #timeButton').click(function(){
@@ -15,7 +15,7 @@ props.fs.readFile(`${__dirname}/ui.html`, function(err, data){
 		});
 	});
 	//Read the microphone icon and add as a navbar icon
-	props.fs.readFile(__dirname + '/microphone.png', {encoding: 'base64'}, function(err, data){
+	props.getImageFileAsBase64(__dirname + '/microphone.png', function(err, data){
 		if (err) console.err(err);
 		button = `
 			<li>
@@ -59,9 +59,9 @@ function toggleLyricScroller(toggle){
 const singFuncs = {
 	load: (trackURI, trackName, trackArtist) => {
 		//Make lyrics cache if it doesn't exist
-		props.fs.access(props.paths.caches.lyrics, props.fs.F_OK, (err) => {
+		props.checkPathExists(props.paths.caches.lyrics, (err) => {
 			if (err){
-				props.fs.mkdir(props.paths.caches.lyrics, (err) => {
+				props.createDirectory(props.paths.caches.lyrics, (err) => {
 					if (err) console.log(err);
 				});
 			}
@@ -70,7 +70,7 @@ const singFuncs = {
 			singFuncs.showLoader();
 			var filepath = `${props.paths.caches.lyrics}/${trackArtist.split(',')[0]}-${trackName.match(/(\w+)/g).join('-')}.html`;
 			$('#sing-ui').attr('data-ref', trackURI);
-			props.fs.access(filepath, props.fs.F_OK, (err, data) => {
+			props.checkPathExists(filepath, (err, data) => {
 				if (err){
 					//Either exists or corrupt, let's get it again
 					mxm(trackName, trackArtist, (err, result) => {
@@ -79,7 +79,7 @@ const singFuncs = {
 							$('#sing-ui #sing-container').html(`<main class='centerstage'><div><h1>Sorry, I couldn't find the lyrics to this song.</h1><h4>(${err})</h4></div></main>`);
 						} else {
 							lyrics = `<div id='lyrics'><h1>${result.name}</h1><h2>${result.artists}</h2><div>${result.lyrics.replace(/\n/g, '<br/>')}</div><br/><br/><p><a href='${result.url}'>View on MusixMatch</a><br/>Lyrics from MusixMatch, using <a href='https://github.com/Quacky2200/node-unofficialmxm'>node-unofficialmxm</a></p></div>`;
-							props.fs.writeFile(filepath, lyrics, (err) => {
+							props.createUTF8File(filepath, lyrics, (err) => {
 								if (err) console.log(err);
 								$('#sing-ui #sing-container').html(lyrics);
 								$('#sing-ui #sing-container a').click(function(){
@@ -90,7 +90,7 @@ const singFuncs = {
 						}
 					});
 				} else {
-					props.fs.readFile(filepath, (error, data) => {
+					props.getUTF8File(filepath, (error, data) => {
 						singFuncs.hideLoader();
 						if (err){
 							$('#sing-ui #sing-container').html(`<main class='centerstage'><div><h1>Sorry, I couldn't get the lyrics to this song.</h1><h4>(${error})</h4></div></main>`);

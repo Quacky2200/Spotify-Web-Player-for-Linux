@@ -1,3 +1,7 @@
+/*
+ * @author Matthew James <Quacky2200@hotmail.com>
+ * Window menu functionality
+ */
 function toggleMenu(toggle){
 	let Menu = props.electron.Menu;
 	if(toggle && !toggleMenu.menu){

@@ -133,13 +133,11 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Theme</h2>
-						<span>Are you from the dark side and would like to see the light?</span>
+						<span>Change the look of the interface</span>
 					</td>
 					<td>
 						<label>
 							<select name='Theme'>
-								<option value='dark'>Dark</option>
-								<option value='light'>Light</option>
 							</select>
 						</label>
 					</td>
@@ -155,7 +153,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Enabled</h2>
-						<span>Should Spotify Web Player show a tray icon?</span>
+						<span>Toggles whether Spotify Web Player for Linux should show a tray icon?</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -203,7 +201,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Show Application Menu</h2>
-						<span>Whether Spotify Web Player should hide the application menu<br/>&nbsp;<i>Warning! Without a tray icon, you may not be able to get into the preferences window</i></span>
+						<span>Toggles whether Spotify Web Player for Linux should hide the application menu<br/>&nbsp;<i>Warning! Without a tray icon, you may not be able to get into the preferences window</i></span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -214,7 +212,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Start on Login</h2>
-						<span>Love Spotify Web Player? Get it whenever your computer logs in!</span>
+						<span>Toggles whether Spotify Web Player for Linux will start on user login</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -225,7 +223,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Start Hidden</h2>
-						<span>Starts Spotify Web Player minimized<br/></span>
+						<span>Toggles whether Spotify Web Player for Linux will start minimized<br/></span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -243,7 +241,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Show Browse Icon</h2>
-						<span>If you like to endlessly scroll your Facebook feed, this may be a good option to turn off...</span>
+						<span>Toggles the visibility of the browse icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -254,7 +252,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Show 'Your Music' Icon</h2>
-						<span>If you like to experience a variety of music and never listen to your own, this may be a wasted icon</span>
+						<span>Toggles the visibility of the 'Your Music' icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -262,7 +260,7 @@ label.toggle input[type='checkbox']:checked{
 						</label>
 					</td>
 				</tr>
-				<tr class='indent'>
+<!-- 				<tr class='indent'>
 					<td>
 						<h2>Show Radio Icon</h2>
 						<span>Never use it, get rid of it..eh?</span>
@@ -272,11 +270,11 @@ label.toggle input[type='checkbox']:checked{
 							<input type='checkbox' name='NavBar.Radio'>
 						</label>
 					</td>
-				</tr>
+				</tr> -->
 				<tr class='indent'>
 					<td>
 						<h2>Show Follow Icon</h2>
-						<span>Not everyone is social - I understand</span>
+						<span>Toggles the visibility of the follow icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -287,7 +285,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Show User Icon</h2>
-						<span>When you feel ugly, simply turn this off</span>
+						<span>Toggles the visibility of the user account icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -298,7 +296,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Show Settings Icon</h2>
-						<span>I cannot think of a reason this should be removed but never the less, the option is there</span>
+						<span>Toggles the visibility of the settings icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -309,7 +307,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr class='indent'>
 					<td>
 						<h2>Show Sing! Icon</h2>
-						<span>Some people are pop stars and don't need lyrics, others, however...do.</span>
+						<span>Toggles the visibility of the Sing! button on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -320,7 +318,7 @@ label.toggle input[type='checkbox']:checked{
 				<tr>
 					<td>
 						<h2>Store Album Art?</h2>
-						<span>Sometimes you want album art, other times it's just art...<br/><i>Note: Album Art will still be downloaded temporarily to /tmp for notifications (but deleted on reboot)</i></span>
+						<span>Toggles whether album art will be stored for caching<br/><i>Note: Album Art will still be downloaded temporarily to /tmp for notifications (but deleted on reboot)</i></span>
 					</td>
 					<td>
 						<label class='toggle'>
@@ -344,17 +342,6 @@ label.toggle input[type='checkbox']:checked{
 					</td>
 					<td>
 						<a class='btn btn-primary clean-lyric-cache'>Clean Me</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h2>Show DevTools</h2>
-						<span>Have a look under the hood and see the horror<br><i>DevTools will open when the window is re-opened</i></span>
-					</td>
-					<td>
-						<label class='toggle'>
-							<input type='checkbox' name='ShowDevTools'>
-						</label>
 					</td>
 				</tr>
 			</table>

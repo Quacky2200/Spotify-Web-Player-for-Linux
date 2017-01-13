@@ -18,10 +18,15 @@ html, body{width: 100%;height:100%;border:0 !important;margin:0;padding:0;}
 */
 div.upperLeft{position: initial !important;height: auto !important;left: initial !important;right: initial !important;}
 div.section-divider{margin-top: 25px !important ;}
-#hpto-container{animation: advertisementSlide 1s; animation-delay: 2s; animation-timing-function: linear; transform-origin: center bottom;}
+#hpto-container{animation: advertisementSlide 1s; animation-delay: 2s; animation-timing-function: linear; transform-origin: center top;}
 
 @keyframes advertisementSlide{
     from {transform: scale(1, 0);}
     to {transform:scale(1,1);}
 }
-
+#infobar {position: absolute;bottom: 0;left:0;right:0;width:100%;padding: 10px;}
+#infobar table {width: 100%}
+#infobar table tr {}
+#infobar table tr td {text-align: center}
+#infobar table tr td a {border: none !important}
+#infobar table tr td a.fullscreen img{transform: rotate(90deg);}

@@ -37,9 +37,8 @@ const tray = {
 	    quit: {label: "Quit", click:function(){
 	    	tray.toggleTray(false);
 	    	appMenu.toggleMenu(false);
-			controller.stopService();
-			windowHook = false;
-			props.electron.app.quit();
+				windowHook = false;
+				props.electron.app.quit();
 	    }}
 	},
 	toggleTray: function(toggle){
@@ -53,7 +52,7 @@ const tray = {
 			    tray.contextMenu.toggleSpotifyAppearance,
 			    tray.contextMenu.appPreferences,
 			    tray.contextMenu.logout,
-			    tray.contextMenu.quit 
+			    tray.contextMenu.quit
 			]));
 			tray.appIcon.on('click', () => {
 				props.spotify.show();

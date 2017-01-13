@@ -1,11 +1,14 @@
+/*
+ * @author Matthew James <Quacky2200@hotmail.com>
+ * Preload script for about window
+ */
 global.remote = require('electron').remote;
 let props = remote.getGlobal('props');
 global.props = props;
 
 document.onreadystatechange = function(){
 	window.$ = window.jQuery = require('../spotify/jquery');
-	let interface = require('../spotify/interface');
-	interface.load();
+	interface = require('../spotify/interface');
   	$('#logo').attr('src', __dirname + '/Spotify_Logo_RGB_White.png');
 	$('#app_title_and_version').html(props.names.project + '<br>v' + props.electron.app.getVersion());
 
@@ -29,8 +32,5 @@ document.onreadystatechange = function(){
 	$('#libraries').html(html);
 	//For all clicks, open externally
 	$('a').click(click);
-	setInterval(() => {
-		$('#memoryusage').text('MEM: ' + (props.process.getProcessMemoryInfo().workingSetSize / 1000) + 'MB');
-	}, 5000);
 };
 

@@ -1,6 +1,0 @@
-#!/bin/sh
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-OLDDIR=$(pwd)
-cd $DIR
-$DIR/libs/electron/spotifywebplayer $DIR/. &
-cd $OLDDIR

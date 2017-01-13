@@ -1,3 +1,7 @@
+/*
+ * @author Matthew James <Quacky2200@hotmail.com>
+ * Preload script for preferences screen
+ */
 global.remote = require('electron').remote;
 let fs = require('fs');
 let props = remote.getGlobal('props');
@@ -23,10 +27,9 @@ var deleteFolderRecursive = function(path) {
   }
 };
 document.onreadystatechange = function(){
+	if (document.readyState !== 'complete') return;
 	window.$ = window.jQuery = require('../spotify/jquery');
-	var interface = require('../spotify/interface');
-	interface.load();
-
+	interface = require('../spotify/interface');
 	function recursivelySetupSettings(settings, skip, prefix){
 		for(var setting in settings){
 			if(skip.indexOf(setting) != -1) continue;
@@ -71,19 +74,19 @@ document.onreadystatechange = function(){
 	});
 
 	$('input[name*=\'NavBar\'], select').change(() => {
-		var i = 0;
-		var setTheme = setInterval(() => {
-			if(i > 5) clearInterval(setTheme);
-			i += 1;
-			props.spotify.webContents.executeJavaScript('interface.load();interface.clean()');
-			interface.load();
-			interface.clean();
-		}, 1500);
+		interface.refresh();
+		props.spotify.webContents.executeJavaScript('interface.refresh()');
 	});
-
+	interface.allThemeNames.forEach((theme) => {
+		$('select[name*=\'Theme\']').append(`<option value='${theme}'>${theme.charAt(0).toUpperCase() + theme.slice(1)}</option>`);
+	});
 	$('select[name=\'Theme\']').change(function(){
-		props.settings.Theme = $(this).val();
-		props.settings.save();
+		interface.themeName = $(this).val();
+		props.spotify.webContents.executeJavaScript('interface.refresh()');
+		setTimeout(() => {
+			console.log(props.spotify.AboutInstance)
+			if(props.spotify.AboutInstance) props.spotify.AboutInstance.webContents.executeJavaScript('interface.refresh()');
+		}, 50)
 	});
 	$('select[name=\'TrayIcon\']').change(function(){
 		props.settings.TrayIcon = $(this).val();
@@ -101,5 +104,6 @@ document.onreadystatechange = function(){
 	$('a.clean-lyric-cache').click(() => {
 		deleteFolderRecursive(props.lyricCache);
 	});
+	interface.refresh();
 };
 

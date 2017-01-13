@@ -1,11 +1,21 @@
+/*
+ * @author Matthew James <Quacky2200@hotmail.com>
+ * App behaviour class
+ */
 const OS = require('os');
 const FS = require('fs');
+const request = require('request');
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 const app = electron.app;
+const sanitize = require('sanitize-filename')
 const MXM = require('node-unofficialmxm');
+//Let's load up our application
+if(typeof(electron) != 'object' && !electron.app){
+	console.log('The Electron installation cannot be found. Aborting...');
+	process.exit(-1);
+}
 App = (function(){
-	let Spotify;
 	let _spotify;
 	class App {
 		constructor(){
@@ -38,30 +48,31 @@ App = (function(){
 		            Theme: 'dark',
 		            StartOnLogin: false,
 		            StartHidden: false,
-		            ShowDevTools: false,
 		            lastURL: null
 		        }
 		    );
-		    this.settings.open((err, data) => { 
+		    this.settings.open((err, data) => {
 		    	if(err){
 					console.log("The settings are corrupt, cannot continue.");
 					process.exit(-1);
 		    	}
 			});
+			this.dbus = require('./dbus')(App.names.process);
 			require('./plugins')(app);
 			//Set Cache
 			app.setPath('userData', App.paths.home);
 			app.setPath('userCache', `${App.paths.home}/Cache`);
+			//Some fonts and images are not always served over HTTPS -_-
+			app.commandLine.appendSwitch('--allow-running-insecure-content');
+			app.commandLine.appendSwitch('--ignore-certificate-errors');
 			//Set the name of the application
 			app.setName(App.names.process);
 			//Set the process name
 			process.title = App.names.process;
 			//When Electron has loaded, start opening the window.
 			app.on('ready', () => {
-				Spotify = require('./windows/windows')(this, electron, BrowserWindow);
+				var Spotify = require('./windows/windows')(this, electron, BrowserWindow);
 				_spotify = new Spotify();
-				//Spotify.showAbout();
-				_spotify.openDevTools();
 			});
 			app.on('quit', () => {
 			    console.log('Exiting...');
@@ -69,7 +80,6 @@ App = (function(){
 			//Make sure we only run one instance of the application
 			var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
 			    // Someone tried to run a second instance, we should focus our window.
-			    _spotify;
 			    if (_spotify) {
 			        if (_spotify.isMinimized()) _spotify.restore();
 			        _spotify.show();
@@ -91,12 +101,18 @@ App = (function(){
 		get VERSION(){
 			return electron.app.getVersion();
 		}
+		print(str){
+			console.log(str);
+		}
 		static get names(){
 			return {
 				process: 'spotifywebplayer',
 				service: 'Spotify Web Player',
 				project: 'Spotify Web Player for Linux'
 			}
+		}
+		get request(){
+			return request;
 		}
 		get names(){
 			return App.names;
@@ -132,11 +148,39 @@ App = (function(){
 					lyrics: `${HOME_PATH}/LyricCache`,
 					albums: `${HOME_PATH}/AlbumCache`
 				},
-				icons: `${__dirname}/icons`
+				icons: `${__dirname}/icons`,
+				themes: `${__dirname}/windows/spotify/themes`
 			}
 		}
 		get paths(){
 			return App.paths;
+		}
+		sanitizeFilename(filename){
+			return sanitize(filename);
+		}
+		getFilesInDir(filepath){
+			return FS.readdirSync(filepath);
+		}
+		checkPathExists(path, cb){
+			FS.access(path, FS.constants.R_OK || FS.constants.W_OK || FS.constants.F_OK, (err) => cb(err));
+		}
+		getUTF8File(filename, cb){
+			FS.readFile(filename, {encoding: 'utf-8'}, (err, data) => cb(err, data));
+		}
+		createUTF8File(filename, text, cb){
+			FS.writeFile(filename, text, {encoding: 'utf-8'}, (err) => cb(err));
+		}
+		createFile(filename, data, type, cb){
+			FS.writeFile(filename, data, type, (err) => cb(err));
+		}
+		readFile(filename, type, cb){
+			FS.readFile(filename, type, (err, data) => cb(err, data));
+		}
+		getImageFileAsBase64(filename, cb){
+			FS.readFile(filename, {encoding: 'base64'}, (err, data) => cb(err, data));
+		}
+		createDirectory(filepath, cb){
+			FS.mkdir(filepath, (err) => cb(err));
 		}
 		static get icon(){
 			return `${App.paths.icons}/spotify.png`;
@@ -159,22 +203,11 @@ App = (function(){
 		get FILEPATH(){
 			App.FILEPATH;
 		}
-		get fs(){
-			return FS;
-		}
 		get spotify(){
 			return _spotify;
 		}
 	}
 	return App;
 })();
-
-//Let's load up our application
-if(typeof(electron) != 'object' && !electron.app){
-	console.log('The Electron installation cannot be found. Aborting...');
-	process.exit(-1);
-}
-const SWP4L = new App();
-//Make our application backend available on the renderer
-//(i.e. props for properties)
-global.props = SWP4L;
+const APP = new App();
+global.props = APP;

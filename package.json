@@ -11,19 +11,39 @@
     "dist": "build"
   },
   "build": {
-    "asar": {
-      "unpack": "**/D-Bus/**/*"
-    },
-    "files": ["**/*", "!spotifywebplayer", "!*.md", "!*.sh"],
-    "extraResources": "plugins/libpepflashplayer-${arch}.so",
+    "asarUnpack": [
+      "windows/spotify/D-Bus",
+      "node_modules/mpris-service",
+      "node_modules/freedesktop-notifications",
+      "node_modules/dbus"
+    ],
+    "files": [
+      "**/*",
+      "!spotifywebplayer",
+      "!*.md",
+      "!*.sh",
+      "!libs/electron"
+    ],
+    "extraResources": [
+      "plugins/libpepflashplayer-${arch}.so"
+    ],
     "linux": {
       "synopsis": "An Electron wrapper of Spotify Web Player to increase desktop integration for a stable Spotify Player for Linux replacement",
       "category": "Audio",
       "packageCategory": "GNOME;GTK;AudioVideo;Audio;Player",
-      "depends": ["libappindicator1", "libindicator7", "libnotify4", "notify-osd", "wget", "unzip", "tar"],
+      "depends": [
+        "libappindicator1",
+        "libindicator7",
+        "libnotify4",
+        "notify-osd",
+        "wget",
+        "unzip",
+        "tar"
+      ],
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "zip"
       ]
     }
   },
@@ -52,10 +72,12 @@
     "freedesktop-notifications": "^1.2.2",
     "mpris-service": "^1.1.1",
     "node-unofficialmxm": "git+https://github.com/Quacky2200/node-unofficialmxm.git",
-    "request": "^2.74.0"
+    "request": "^2.74.0",
+    "sanitize-filename": "^1.6.1"
   },
   "devDependencies": {
-    "electron": "1.4.6",
-    "electron-builder": "next"
+    "electron": "1.4.2",
+    "electron-builder": "next",
+    "electron-rebuild": "^1.5.6"
   }
 }
