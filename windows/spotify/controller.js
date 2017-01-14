@@ -122,8 +122,8 @@ module.exports = (function() {
 				dbus.mpris.on('play', () => this.play());
 				dbus.mpris.on('playpause', () => this.playPause());
 				dbus.mpris.on('next', () => this.next());
-				dbus.mpris.on('previous', this.previous);
-				dbus.mpris.on('stop', this.stop);
+				dbus.mpris.on('previous', () => this.previous());
+				dbus.mpris.on('stop', () => this.stop());
 				dbus.mpris.on('openuri', (e) => {if(e.uri.indexOf('spotify:track:') > -1){this.playTrack(e.uri)}});
 				dbus.mpris.on('quit', () => { this.emit('Quit'); });
 				dbus.mpris.on('raise', () => { this.emit('Raise'); });
