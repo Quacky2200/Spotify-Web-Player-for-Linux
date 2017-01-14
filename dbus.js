@@ -27,23 +27,76 @@ module.exports = function(appName){
 			});
 		}
 	}
+	class DBusMPRIS extends EventEmitter{
+		constructor(appName) {
+			super();
+			this._player = Player({
+			    name: appName,
+			    identity: appName,
+			    supportedUriSchemes: ['http'],
+			    supportedMimeTypes: ['application/www-url'],
+			    desktopEntry: appName
+			});
+		}
+		on(name, func){
+			this._player.on(name, func);
+		}
+		set position(pos) {
+			if (pos !== this.position) this._player.position = pos;
+		}
+		get position() {
+			return this._player.position;
+		}
+		set playbackStatus(stat){
+			if (stat !== this.playbackStatus) this._player.playbackStatus = stat;
+		}
+		get playbackStatus(){
+			return this._player.playbackStatus;
+		}
+		set volume(vol) {
+			if (vol !== this.volume) this._player.volume = vol;
+		}
+		get volume() {
+			return this._player.volume;
+		}
+		set shuffle(shuff){
+			if (shuff !== this.shuffle) this._player.shuffle = shuff;
+		}
+		get shuffle(){
+			return this._player.shuffle;
+		}
+		set repeat(rep){
+			if (rep !== this.repeat) this._player.repeat = rep;
+		}
+		get repeat() {
+			return this._player.repeat;
+		}
+		set metadata (met) {
+			if (
+				(met && !this.metadata) ||
+				(this.metadata && this.metadata['xesam:url'] !== met['xesam:url'])
+			) {
+				this._player.metadata = met;
+			}
+		}
+		get metadata(){
+			return this._player.metadata;
+		}
+		objectPath(str) {
+			return this._player.objectPath(str);
+		}
+	}
 	return {
 		mediakeys: new DBusMediaKeys(bus),
 		notifications: {
 			notify: (summary, body, icon) => {
-				console.log(summary, body, icon);
+				console.log(`notify('${summary}','${body.replace(/\n/g, '\\n')}','${icon}')`);
 				notification.summary = summary;
 				notification.body = body;
 				notification.icon = icon;
 				notification.push();
 			}
 		},
-		mpris: Player({
-		    name: appName,
-		    identity: appName,
-		    supportedUriSchemes: ['http'],
-		    supportedMimeTypes: ['application/www-url'],
-		    desktopEntry: appName
-		})
+		mpris: new DBusMPRIS(appName)
 	};
 };

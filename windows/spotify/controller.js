@@ -8,22 +8,20 @@ module.exports = (function() {
 	const dbus = props.dbus;
 	updateMetadata = function(info){
 		if (dbus && info.track){
-			if (!dbus.mpris.metadata || (dbus.mpris.metadata && dbus.mpris.metadata['xesam:url'] !== info.track.url)) {
-				dbus.mpris.metadata = {
-					'mpris:trackid': dbus.mpris.objectPath('track/' + info.track.trackNumber),
-					'mpris:length': info.track.length,
-					'mpris:artUrl': info.track.art,
-					'xesam:title': info.track.name.replace(/(\'| - .*| \(.*)/i, ''), //Remove long track titles
-					'xesam:album': info.track.album.replace(/(\'| - .*| \(.*)/i, ''), //Remove long album names
-					'xesam:artist': info.track.artists,
-					'xesam:url': info.track.url
-				};
-			}
-			if (dbus.mpris.volume != info.volume) dbus.mpris.volume = info.volume;
-			if (info.track.position && dbus.mpris.position != info.track.position) dbus.mpris.position = info.track.position;
-			if (dbus.mpris.playbackStatus != info.status) dbus.mpris.playbackStatus = info.status;
-			if (dbus.mpris.shuffle != info.shuffle) dbus.mpris.shuffle = info.shuffle;
-			if (dbus.mpris.repeat != info.repeat) dbus.mpris.repeat = info.repeat;
+			dbus.mpris.metadata = {
+				'mpris:trackid': dbus.mpris.objectPath('track/' + info.track.trackNumber),
+				'mpris:length': info.track.length,
+				'mpris:artUrl': info.track.art,
+				'xesam:title': info.track.name.replace(/(\'| - .*| \(.*)/i, ''), //Remove long track titles
+				'xesam:album': info.track.album.replace(/(\'| - .*| \(.*)/i, ''), //Remove long album names
+				'xesam:artist': info.track.artists,
+				'xesam:url': info.track.url
+			};
+			dbus.mpris.volume = info.volume;
+			dbus.mpris.position = info.track.position;
+			dbus.mpris.playbackStatus = info.status;
+			dbus.mpris.shuffle = info.shuffle;
+			dbus.mpris.repeat = info.repeat;
 		}
 	}
 	class Controller extends EventEmitter {
@@ -114,28 +112,24 @@ module.exports = (function() {
 			});
 
 			if (dbus) {
-				console.log('setup!');
-				dbus.mediakeys.on('Play', () => {
-					console.log('RECEIVED!!!');
-					this.playPause();
-				});
-				dbus.mediakeys.on('Stop', this.stop);
-				dbus.mediakeys.on('Next', this.next);
-				dbus.mediakeys.on('Previous', this.previous);
+				dbus.mediakeys.on('Play', () => this.playPause());
+				dbus.mediakeys.on('Stop', () => this.stop());
+				dbus.mediakeys.on('Next', () => this.next());
+				dbus.mediakeys.on('Previous', () => this.previous());
 
-				dbus.mpris.on('Play', this.play);
-				dbus.mpris.on('PlayPause', this.playPause);
-				dbus.mpris.on('Next', this.next);
-				dbus.mpris.on('Previous', this.previous);
-				dbus.mpris.on('Stop', this.stop);
-				dbus.mpris.on('OpenUri', (e) => {if(e.uri.indexOf('spotify:track:') > -1){this.playTrack(e.uri)}});
-				dbus.mpris.on('Quit', () => { this.emit('Quit'); });
-				dbus.mpris.on('Raise', () => { this.emit('Raise'); });
-				dbus.mpris.on('Volume', (volume) => {this.setVolume(volume);});
-				dbus.mpris.on('Shuffle', (shuffle) => {this.setShuffle(shuffle);});
-				dbus.mpris.on('Loop', (loop) => {this.setLoop(loop);});
-				dbus.mpris.on('Seek', (mms) => {this.seek(mms.delta/1000);});
-				dbus.mpris.on('SetPosition', (track,pos) => {console.log('SetPosition not yet implemented')});
+				dbus.mpris.on('play', () => this.play());
+				dbus.mpris.on('playpause', () => this.playPause());
+				dbus.mpris.on('next', () => this.next());
+				dbus.mpris.on('previous', this.previous);
+				dbus.mpris.on('stop', this.stop);
+				dbus.mpris.on('openuri', (e) => {if(e.uri.indexOf('spotify:track:') > -1){this.playTrack(e.uri)}});
+				dbus.mpris.on('quit', () => { this.emit('Quit'); });
+				dbus.mpris.on('raise', () => { this.emit('Raise'); });
+				dbus.mpris.on('volume', (volume) => {this.setVolume(volume);});
+				dbus.mpris.on('shuffle', (shuffle) => {this.setShuffle(shuffle);});
+				dbus.mpris.on('loopStatus', (loop) => {this.setLoop(loop);});
+				dbus.mpris.on('seek', (mms) => {this.seek(mms.delta/1000);});
+				dbus.mpris.on('position', (track,pos) => {console.log('SetPosition not yet implemented')});
 			}
 		}
 		pause() {
