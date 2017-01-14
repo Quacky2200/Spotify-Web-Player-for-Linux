@@ -20,42 +20,42 @@ App = (function(){
 	class App {
 		constructor(){
 			this.settings = require('./app-settings')(
-		        `${App.paths.home}/preferences.json`,
-		        {
-		            CloseToTray: true,
-		            CloseToController: false,
-		            ShowApplicationMenu: true,
-		            ShowTray: true,
-		            TrayIcon: 'lime',
-		            Notifications: {
-		                ShowTrackChange: true,
-		                ShowPlaybackPlaying: true,
-		                ShowPlaybackPaused: true,
-		                ShowPlaybackStopped: true,
-		                OnlyWhenFocused: true
-		            },
-		            NavBar: {
-		                Follow: true,
-		                User: true,
-		                Radio: true,
-		                YourMusic: true,
-		                Browse: true,
-		                Settings: true,
-		                Search: true,
-		                Sing: true
-		            },
-		            AlbumCacheDisabled: false,
-		            Theme: 'dark',
-		            StartOnLogin: false,
-		            StartHidden: false,
-		            lastURL: null
-		        }
-		    );
-		    this.settings.open((err, data) => {
-		    	if(err){
+				`${App.paths.home}/preferences.json`,
+				{
+					CloseToTray: true,
+					CloseToController: false,
+					ShowApplicationMenu: true,
+					ShowTray: true,
+					TrayIcon: 'lime',
+					Notifications: {
+						ShowTrackChange: true,
+						ShowPlaybackPlaying: true,
+						ShowPlaybackPaused: true,
+						ShowPlaybackStopped: true,
+						OnlyWhenFocused: true
+					},
+					NavBar: {
+						Follow: true,
+						User: true,
+						Radio: true,
+						YourMusic: true,
+						Browse: true,
+						Settings: true,
+						Search: true,
+						Sing: true
+					},
+					AlbumCacheDisabled: false,
+					Theme: 'dark',
+					StartOnLogin: false,
+					StartHidden: false,
+					lastURL: null
+				}
+			);
+			this.settings.open((err, data) => {
+				if(err){
 					console.log("The settings are corrupt, cannot continue.");
 					process.exit(-1);
-		    	}
+				}
 			});
 			this.dbus = require('./dbus')(App.names.process);
 			require('./plugins')(app);
@@ -75,27 +75,27 @@ App = (function(){
 				_spotify = new Spotify();
 			});
 			app.on('quit', () => {
-			    console.log('Exiting...');
+				console.log('Exiting...');
 			});
 			//Make sure we only run one instance of the application
 			var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-			    // Someone tried to run a second instance, we should focus our window.
-			    if (_spotify) {
-			        if (_spotify.isMinimized()) _spotify.restore();
-			        _spotify.show();
-			        _spotify.focus();
-			    }
+				// Someone tried to run a second instance, we should focus our window.
+				if (_spotify) {
+					if (_spotify.isMinimized()) _spotify.restore();
+					_spotify.show();
+					_spotify.focus();
+				}
 			});
 			//Quit if we're trying to run another instance
 			if (shouldQuit) {
-			    console.log('An instance is already running, exiting...');
-			    app.quit();
-			    return;
+				console.log('An instance is already running, exiting...');
+				app.quit();
+				return;
 			}
 			//Let's support OS X anyways.
 			app.on('activate', function () {
-			    _spotify.show();
-			    _spotify.unmaximize();
+				_spotify.show();
+				_spotify.unmaximize();
 			});
 		}
 		get VERSION(){
@@ -205,12 +205,12 @@ App = (function(){
 		}
 		clearCache(){
 			_spotify.loadURL("about:blank");
-      _spotify.webContents.session.clearCache(() => {
-      	_spotify.webContents.session.clearStorageData(() => {
-        	console.log("Cleared session and cache.");
-        	_spotify.loadURL(this.HOST);
-      	});
-    	});
+			_spotify.webContents.session.clearCache(() => {
+				_spotify.webContents.session.clearStorageData(() => {
+					console.log("Cleared session and cache.");
+					_spotify.loadURL(this.HOST);
+				});
+			});
 		}
 	}
 	return App;

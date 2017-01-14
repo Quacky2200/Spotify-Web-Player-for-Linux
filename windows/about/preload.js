@@ -33,4 +33,3 @@ document.onreadystatechange = function(){
 	//For all clicks, open externally
 	$('a').click(click);
 };
-

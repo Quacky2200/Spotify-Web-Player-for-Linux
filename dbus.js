@@ -17,12 +17,9 @@ module.exports = function(appName){
 	class DBusMediaKeys extends EventEmitter{
 		constructor(bus){
 			super();
-
 			bus.getInterface('org.gnome.SettingsDaemon', '/org/gnome/SettingsDaemon/MediaKeys', 'org.gnome.SettingsDaemon.MediaKeys', (err, iface) => {
 				if(err) return console.log(err);
-				iface.on('MediaPlayerKeyPressed', (n, value) => {
-					this.emit(value);
-				});
+				iface.on('MediaPlayerKeyPressed', (n, value) => this.emit(value));
 				iface.GrabMediaPlayerKeys(0, 'org.gnome.SettingsDaemon.MediaKeys');
 			});
 		}
@@ -31,11 +28,11 @@ module.exports = function(appName){
 		constructor(appName) {
 			super();
 			this._player = Player({
-			    name: appName,
-			    identity: appName,
-			    supportedUriSchemes: ['http'],
-			    supportedMimeTypes: ['application/www-url'],
-			    desktopEntry: appName
+				name: appName,
+				identity: appName,
+				supportedUriSchemes: ['http'],
+				supportedMimeTypes: ['application/www-url'],
+				desktopEntry: appName
 			});
 		}
 		on(name, func){

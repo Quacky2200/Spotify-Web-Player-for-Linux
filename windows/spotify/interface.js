@@ -15,13 +15,13 @@ module.exports = (function() {
 	const ALL_IFRAMES = "div[id*='section-'] iframe[id*='app-spotify:'], #app-player, #context-actions";
 	//Reduce the prevelence of advertisements
 	let tameAdvertisements = function(){
-		var frames = $('.root iframe')
+		var frames = $('.root iframe');
 		for (var i = 0; i < frames.length; i++) {
 			var frame = $(frames[i]).contents();
 			var advertContainer = "#header.container,.hpto-container"
 			var potentialAdvert = $(advertContainer, frame);
 			if ($(potentialAdvert).has("#hpto") && $(`body > *:last-child:not(${advertContainer})`, frame).length == 1){
-			    //Place the advert onto the bottom if it's at the top
+				//Place the advert onto the bottom if it's at the top
 				var advert = potentialAdvert.detach();
 				advert.appendTo($('body', frame));
 			}
@@ -42,7 +42,7 @@ module.exports = (function() {
 			//Load the base theme
 			props.getUTF8File(`${__dirname}/base-theme.css`, (err, data) => {
 				if (err) return console.error(err);
-			   	CURRENT_THEME.BASETHEME_CACHE = `/* Base Theming */\n${data}`;
+				CURRENT_THEME.BASETHEME_CACHE = `/* Base Theming */\n${data}`;
 			})
 			//Load current theme into cache
 			loadTheme(props.settings.Theme, (err) => {
@@ -110,14 +110,14 @@ module.exports = (function() {
 				tameAdvertisements();
 				var interfaceClass = 'controlbot';
 				CSS = `<style class="${interfaceClass}">${this.navbarCSS + this.themeCSS}</style>`;
-		        $('body').prepend(CSS);
-		        $('body', $(ALL_IFRAMES).contents()).prepend(CSS);
-		        $('style.controlbot:not(:first-child)', $(ALL_IFRAMES).contents()).remove();
+				$('body').prepend(CSS);
+				$('body', $(ALL_IFRAMES).contents()).prepend(CSS);
+				$('style.controlbot:not(:first-child)', $(ALL_IFRAMES).contents()).remove();
 				$('style.controlbot:not(:first-child)').remove();
-		        //Always make sure sing button is at the bottom
-		        $('li').has('#nav-sing').appendTo('#nav-items');
-		        //Hide the ugly flash player box
-		        $('#core object').height(0).width(0);
+				//Always make sure sing button is at the bottom
+				$('li').has('#nav-sing').appendTo('#nav-items');
+				//Hide the ugly flash player box
+				$('#core object').height(0).width(0);
 			}
 		}
 	}

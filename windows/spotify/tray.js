@@ -31,28 +31,28 @@ const tray = {
 		appPreferences: {label: "App Preferences", click: function(){
 			props.spotify.showPreferences();
 		}},
-	    logout: {label: "Logout", click: function(){
-	    	user.logout();
-	    }},
-	    quit: {label: "Quit", click:function(){
-	    	tray.toggleTray(false);
-	    	appMenu.toggleMenu(false);
+		logout: {label: "Logout", click: function(){
+			user.logout();
+		}},
+		quit: {label: "Quit", click:function(){
+			tray.toggleTray(false);
+			appMenu.toggleMenu(false);
 				windowHook = false;
 				props.electron.app.quit();
-	    }}
+		}}
 	},
 	toggleTray: function(toggle){
 		if (toggle && props.settings.ShowTray){
 			if (!tray.appIcon) tray.appIcon = new Tray(`${props.paths.icons}/spotify-ico-small-${props.settings.TrayIcon}.png`);
 			tray.appIcon.setContextMenu(Menu.buildFromTemplate([
-			    tray.contextMenu.togglePlayback,
-			    tray.contextMenu.previous,
-			    tray.contextMenu.next,
-			    {type:'separator'},
-			    tray.contextMenu.toggleSpotifyAppearance,
-			    tray.contextMenu.appPreferences,
-			    tray.contextMenu.logout,
-			    tray.contextMenu.quit
+				tray.contextMenu.togglePlayback,
+				tray.contextMenu.previous,
+				tray.contextMenu.next,
+				{type:'separator'},
+				tray.contextMenu.toggleSpotifyAppearance,
+				tray.contextMenu.appPreferences,
+				tray.contextMenu.logout,
+				tray.contextMenu.quit
 			]));
 			tray.appIcon.on('click', () => {
 				props.spotify.show();
@@ -60,7 +60,7 @@ const tray = {
 			});
 		} else if (!toggle && tray.appIcon != null){
 			tray.appIcon.destroy();
-	    	tray.appIcon = null;
+			tray.appIcon = null;
 		}
 	},
 	toggleMediaButtons: function(toggle){

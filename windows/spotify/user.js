@@ -33,11 +33,11 @@ module.exports = {
 	 */
 	logout: function(){
 		tray.toggleMediaButtons(false);
-	    tray.toggleTray(false);
-	    appMenu.toggleMenu(false);
-	    controller.dispose();
-	    props.settings.lastURL = null;
-	    props.settings.save();
+		tray.toggleTray(false);
+		appMenu.toggleMenu(false);
+		controller.dispose();
+		props.settings.lastURL = null;
+		props.settings.save();
 			windowHook = false;
 		if (!props.spotify.isVisible()) props.spotify.show();
 		props.clearCache();

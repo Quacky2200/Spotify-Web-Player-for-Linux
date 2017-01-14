@@ -213,15 +213,15 @@ module.exports = (function() {
 				var album = this.track.album.match(/(?:(?! [^\w]).)*/)[0];
 				var file = (this.track.art ? `${filepath}/${props.sanitizeFilename(album)}.jpeg` : process.cwd() + '/icons/spotify.png');
 				props.checkPathExists(file, (err) => {
- 					if (err) return props.request(this.track.art, {encoding: 'binary'}, (error, response, body) => {
- 						if(error) return cb(err);//console.log(error);
- 						props.createFile(file, body, 'binary', (err) => {
- 							if (err) return cb(err);//console.log(err);
- 							cb(null, file);
- 						});
+					if (err) return props.request(this.track.art, {encoding: 'binary'}, (error, response, body) => {
+						if(error) return cb(err);//console.log(error);
+						props.createFile(file, body, 'binary', (err) => {
+							if (err) return cb(err);//console.log(err);
+							cb(null, file);
+						});
 					});
- 			 		cb(null, file);
- 		 		});
+					cb(null, file);
+				});
 			}
 			if (!this.albumCacheDisabled) props.checkPathExists(filepath, (err) => {
 				if (err) return props.createDirectory(filepath, (err) => {

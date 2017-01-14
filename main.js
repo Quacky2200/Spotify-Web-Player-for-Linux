@@ -7,20 +7,20 @@ if (typeof electron == 'string'){
 	console.log(`Starting up app with Electron found at "${electron}"`);
 
 	ls.stdout.on('data', function(data) {
-	     console.log(data.toString());
-	 });
-
- 	ls.stderr.on('data', function(data) {
-	     console.log(data.toString());
+		console.log(data.toString());
 	});
 
-	 ls.on('close', function(code) {
-	     console.log(`child process exited with code ${code}`);
-	 });
+	ls.stderr.on('data', function(data) {
+		console.log(data.toString());
+	});
+
+	ls.on('close', function(code) {
+		console.log(`child process exited with code ${code}`);
+	});
 	//process.exit(0);
 } else if (typeof electron == 'object' && electron.app){
 	require('./app');
 } else {
- 	console.log('Cannot start up. Exiting...');
+	console.log('Cannot start up. Exiting...');
 	process.exit(-1);
 }
