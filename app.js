@@ -101,9 +101,6 @@ App = (function(){
 		get VERSION(){
 			return electron.app.getVersion();
 		}
-		print(str){
-			console.log(str);
-		}
 		static get names(){
 			return {
 				process: 'spotifywebplayer',

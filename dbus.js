@@ -41,6 +41,9 @@ module.exports = function(appName){
 		on(name, func){
 			this._player.on(name, func);
 		}
+		removeAllListeners(){
+			this._player.removeAllListeners();
+		}
 		set position(pos) {
 			if (pos !== this.position) this._player.position = pos;
 		}

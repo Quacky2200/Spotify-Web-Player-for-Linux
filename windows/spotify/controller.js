@@ -112,6 +112,8 @@ module.exports = (function() {
 			});
 
 			if (dbus) {
+				this.dispose();
+
 				dbus.mediakeys.on('Play', () => this.playPause());
 				dbus.mediakeys.on('Stop', () => this.stop());
 				dbus.mediakeys.on('Next', () => this.next());
@@ -130,6 +132,12 @@ module.exports = (function() {
 				dbus.mpris.on('loopStatus', (loop) => {this.setLoop(loop);});
 				dbus.mpris.on('seek', (mms) => {this.seek(mms.delta/1000);});
 				dbus.mpris.on('position', (track,pos) => {console.log('SetPosition not yet implemented')});
+			}
+		}
+		dispose(){
+			if(dbus){
+				dbus.mediakeys.removeAllListeners();
+				dbus.mpris.removeAllListeners();
 			}
 		}
 		pause() {

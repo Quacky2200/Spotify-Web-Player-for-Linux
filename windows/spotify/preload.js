@@ -148,6 +148,7 @@ document.onreadystatechange = function(){
       props.spotify.minimize();
       return false;
     }
+    controller.dispose();
     appMenu.toggleMenu(false);
     tray.toggleTray(false);
   };

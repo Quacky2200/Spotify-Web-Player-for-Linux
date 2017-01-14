@@ -1,7 +1,7 @@
 {
   "name": "spotifywebplayer",
   "productName": "Spotify Web Player for Linux",
-  "version": "1.0.25",
+  "version": "1.0.30",
   "description": "An Electron wrapper of Spotify Web Player to increase desktop integration for a stable Spotify Player for Linux replacement",
   "main": "main.js",
   "postinstall": "install-app-deps",
@@ -21,8 +21,7 @@
       "**/*",
       "!spotifywebplayer",
       "!*.md",
-      "!*.sh",
-      "!libs/electron"
+      "!*.sh"
     ],
     "extraResources": [
       "plugins/libpepflashplayer-${arch}.so"
@@ -43,9 +42,14 @@
       "target": [
         "AppImage",
         "deb",
-        "zip"
+        "zip",
+        "snap"
       ]
     }
+  },
+  "snap": {
+      "confinement": "devmode",
+      "grade": "stable"
   },
   "repository": {
     "type": "git",

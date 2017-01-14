@@ -30,7 +30,7 @@ module.exports = (function() {
 	//Syncronously read a theme
 	let loadTheme = function(name, cb){
 		props.getUTF8File(`${props.paths.themes}/${name}-theme.css`, (err, newcss) => {
-			if (err) return console.error(err);
+			if (err) return cb(err);
 			CURRENT_THEME.THEME_CACHE = `/* Theme Styling */\n${newcss}`;
 			CURRENT_THEME.THEME_NAME = name;
 			cb(err);
@@ -41,7 +41,7 @@ module.exports = (function() {
 		constructor(){
 			//Load the base theme
 			props.getUTF8File(`${__dirname}/base-theme.css`, (err, data) => {
-				if (err) return;
+				if (err) return console.error(err);
 			   	CURRENT_THEME.BASETHEME_CACHE = `/* Base Theming */\n${data}`;
 			})
 			//Load current theme into cache
@@ -58,7 +58,7 @@ module.exports = (function() {
 			//However, make sure to set the theme if it
 			if (name == CURRENT_THEME.THEME_NAME || name == this.themeName) return;
 			this.isThemeAvailable(name, (err) => {
-				if (err) return;
+				if (err) return console.error(err);
 				props.settings.Theme = name;
 				props.settings.save();
 				loadTheme(name, (err) => {
