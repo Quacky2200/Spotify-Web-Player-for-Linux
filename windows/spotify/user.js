@@ -21,7 +21,7 @@ $(document).on('click', 'a#logout-settings[href="/logout"]', function(e){
 // 	.match(/(\{.*\})/)[0] //Get the JSON out of the script text
 // );
 module.exports = {
-	/* 
+	/*
 	 * Returns if a user is logged into Spotify
 	 * @returns {Boolean}
 	 */
@@ -35,11 +35,11 @@ module.exports = {
 		tray.toggleMediaButtons(false);
 	    tray.toggleTray(false);
 	    appMenu.toggleMenu(false);
-	    if (dbus) dbus.interpreter.clearHandles();
-	    props.appSettings.lastURL = null;
-	    props.appSettings.save();
-		windowHook = false;
-		if (!props.mainWindow.isVisible()) props.mainWindow.show();
+	    controller.dispose();
+	    props.settings.lastURL = null;
+	    props.settings.save();
+			windowHook = false;
+		if (!props.spotify.isVisible()) props.spotify.show();
 		props.clearCache();
 	}
 };

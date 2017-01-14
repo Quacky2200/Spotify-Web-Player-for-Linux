@@ -203,6 +203,15 @@ App = (function(){
 		get spotify(){
 			return _spotify;
 		}
+		clearCache(){
+			_spotify.loadURL("about:blank");
+      _spotify.webContents.session.clearCache(() => {
+      	_spotify.webContents.session.clearStorageData(() => {
+        	console.log("Cleared session and cache.");
+        	_spotify.loadURL(this.HOST);
+      	});
+    	});
+		}
 	}
 	return App;
 })();
