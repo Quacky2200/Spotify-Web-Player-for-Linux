@@ -1,33 +1,219 @@
 <div id='sing-ui'>
+	<div id='overlaydialog'>
+		<div id='container'>
+			<div id='dialog'>
+				<div>Are you happy with your attempt to syncronise the lyrics?</div>
+				<table>
+					<tr>
+						<td align='left'><a href='javascript:;' class='button'>No, Start Again</a></td>
+						<td align='right'><a href='javascript:;' class='button'>Yes, I'm Done!</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<a id='sing-sync' href='javascript:;' style='' title='Syncronise'>&#x023F1;</a>
 	<div id='sing-container'>
 		<main class='centerstage'><div><div class='loader'></div></div></main>
-	</div>
-	<div>
-		<a href='javascript:;'><img id='timeButton' src=''/></a>
 	</div>
 	<style>
 		#sing-ui{
 		    width: calc(100% - (250px + 90px));
 		    position: absolute;
-		    background: rgba(0,0,0,0.90);
 		    height: 100%;
 		    top: 0;
+			opacity: 0;
+			pointer-events: none;
 		    left: 90px;
 		    right: 250px;
 		    z-index: 100;
 		    text-align: center;
-		    font-size: 2.25vw;
-		    line-height: 2.5vw;
+			font-size: 1.5em;
+			line-height: 1.5em;
 		    font-weight: 300;
 		    overflow-x: hidden;
-		    overflow-y: scroll
-		    transition: all 1s linear;
+		    overflow-y: scroll;
+		    transition: all 500ms linear;
+		}
+		#sing-ui.active,
+		#sing-ui.active::before{
+			opacity: 1;
+			pointer-events: all;
+		}
+		#sing-ui::before{
+			content: '';
+			background: rgba(0,0,0,0.8);
+			position:fixed;
+			width: calc(100%);
+			top: 0;
+			left:0;
+			height: 100%;
+			opacity: 0;
+		}
+		#sing-ui #sing-sync{
+			position: fixed;
+			top: 0;
+			right: 260px;
+			padding: 10px;
+			z-index: 15;
+			border: none !important;
+			color: gray;
+			font-size: 1.5em;
+		}
+		#sing-ui #sing-sync.available{
+			color: white;
+		}
+		#sing-ui #sing-sync.available.active{
+			color: #84bd00;
+		}
+		#sing-ui #sing-sync.active{
+			color: red;
+		}
+		#sing-ui,
+		#sing-ui::before,
+		#sing-container,
+		#sing-container #header,
+		#sing-container #footer,
+		#sing-container #lyrics span{
+			transition: all 250ms;
+		}
+		#sing-container #lyrics{
+			position: absolute;
+			width: 100%;
+			top: 25%;
+			left: 0;
+			right: 0;
+			padding: 0 0 5%;
+			color: #5a5a5a;
+			font-weight: 400;
+		}
+		#sing-container.sync #lyrics{
+			top: 50%;
+			padding: 0 0 20%;
+			display: inline-block;
+			margin: 0;
+		}
+		#sing-container.sync #lyrics span.buffer.active{
+			z-index: 15;
+			color: white;
+			position: relative;
+		}
+		#sing-container.sync #lyrics span.part.active{
+			font-size: 1.15em;
+			font-weight: 400;
+			color: white;
+			z-index: 15;
+			position: relative;
+			display: inline-block;
+		}
+		#sing-container span.blank{
+			color: transparent;
+		}
+		#sing-container.sync span.blank.part.active{
+			color: white;
+		}
+		#sing-container span.buffer {
+			display: none;
+		}
+		#sing-container.sync span.buffer{
+			display: inline-block;
+			font-size: 30px;
+		}
+		#sing-container.sync span.buffer.active {
+			font-size: 50px;
+			color: white;
+		}
+		#sing-container #header {
+			background: linear-gradient(to bottom, rgba(0,0,0,1) 50%,rgba(0,0,0,0) 100%);
+			padding: 5% 0 2%;
+			pointer-events: none;
+			z-index: 10;
+			position: fixed;
+			width: calc(100% - 350px);
+			top: 0;
+			margin: 0;
+		}
+		#sing-container #header > *{
+			margin:0
+		}
+		#sing-container.sync #header {
+			padding: 10% 0 15%;
+		}
+		#sing-container #header::after{
+			content: 'Use the Down-Arrow or Enter key to move down a line, or the Up-Arrow key to go back to the beginning';
+			font-size: 1.5vw;
+			font-weight: 400;
+			display: inline-block;
+			margin: 20px 0;
+			transition: opacity 1s;
+			color: red;
+			opacity: 0;
+		}
+		#sing-container.record #header::after{
+			opacity: 1;
+		}
+		#sing-container #footer{
+			pointer-events: none;
+			opacity: 0;
+			overflow: hidden;
+			position: fixed;
+			bottom: 0;
+			width: calc(100% - 350px);
+			margin: 0;
+			padding: 0;
+			color: grey;
+			font-size: 0.75em;
+			font-weight:400;
+			text-align:right;
+		}
+		#sing-container #footer a:link{color: lightgray; border: none !important;pointer-events: all}
+		#sing-container.sync #footer {
+			background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 50%);
+			padding: 15% 30px 10px;
+			opacity: 1;
+		}
+		#sing-container.sync > p{
+			display: none;
 		}
 		#sing-container{
 			position: relative;
 		    width: 100%;
 		    height: 100%;
 		    display: block;
+		}
+		#sing-ui #overlaydialog{
+			position: fixed;
+			display: table;
+			width: calc(100% - 350px);
+			height: 100%;
+			background: rgba(0,0,0,0.75);
+			z-index:20;
+			pointer-events: none;
+			opacity: 0;
+		}
+		#sing-ui #overlaydialog.active{
+			pointer-events: all;
+			opacity:1
+		}
+		#sing-ui #overlaydialog #container{
+			display: table-cell;
+			vertical-align: middle;
+		}
+		#sing-ui #overlaydialog #container #dialog{
+			background: rgb(18, 19, 20);
+			padding: 5px 10px;
+			width: 500px;
+			margin: auto;
+			border-radius: 10px;
+		}
+		#sing-ui #overlaydialog #container #dialog > div {
+			margin: 20px;
+		}
+		#sing-ui #overlaydialog #container #dialog > table{
+			width: 100%;
+		}
+		#sing-ui #overlaydialog a{
+			border: none !important
 		}
 		main.centerstage{display:table;text-align:center;width:100%;height:100%;}
 		main.centerstage > *{display:table-cell;vertical-align:middle;}

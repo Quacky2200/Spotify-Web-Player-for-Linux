@@ -1,0 +1,30 @@
+{
+	"CloseToTray":true,
+	"CloseToController":false,
+	"ShowApplicationMenu":true,
+	"ShowTray":true,
+	"TrayIcon":"lime",
+	"Notifications": {
+		"ShowTrackChange":true,
+		"ShowPlaybackPlaying":true,
+		"ShowPlaybackPaused":true,
+		"ShowPlaybackStopped":true,
+		"OnlyWhenFocused":false
+	},
+	"NavBar": {
+		"Follow":true,
+		"User":true,
+		"Radio":true,
+		"YourMusic":true,
+		"Browse":true,
+		"Settings":true,
+		"Search":true,
+		"Sing":true
+	},
+	"AlbumArtSize": "large",
+	"AlbumCacheDisabled":false,
+	"Theme":"dark",
+	"StartOnLogin":false,
+	"StartHidden":false,
+	"lastURL":""
+}

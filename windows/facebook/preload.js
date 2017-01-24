@@ -1,5 +1,5 @@
 const remote = require('electron').remote;
-var props = remote.getGlobal('props');
+var props = remote.getGlobal('app');
 var popup = remote.getCurrentWindow();
 
 //Thanks to http://stackoverflow.com/questions/12049620/how-to-get-get-variables-value-in-javascript
@@ -31,7 +31,7 @@ if(window.location.href.indexOf("oauth?") >= 0){
 				props.spotify.webContents.once('dom-ready', function(){
 						//Click the button again to make FB check the authentication with our newly created cookie
 						props.spotify.webContents.executeJavaScript("document.getElementById('fb-signup-btn').click();");
-						//Close the FB window, we don't need it anymore 
+						//Close the FB window, we don't need it anymore
 						popup.close();
 				});
 		}

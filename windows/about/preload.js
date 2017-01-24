@@ -2,15 +2,11 @@
  * @author Matthew James <Quacky2200@hotmail.com>
  * Preload script for about window
  */
-global.remote = require('electron').remote;
-let props = remote.getGlobal('props');
-global.props = props;
-
+global.MAIN = require('electron').ipcRenderer
 document.onreadystatechange = function(){
 	window.$ = window.jQuery = require('../spotify/jquery');
-	interface = require('../spotify/interface');
+
   	$('#logo').attr('src', __dirname + '/Spotify_Logo_RGB_White.png');
-	$('#app_title_and_version').html(props.names.project + '<br>v' + props.electron.app.getVersion());
 
 	libraries = {
 		'Support Homepage': 'https://github.com/Quacky2200/Spotify-Web-Player-for-Linux',
@@ -23,7 +19,7 @@ document.onreadystatechange = function(){
 	};
 	html = '';
 	function click(){
-		props.electron.shell.openExternal($(this).attr('href'));
+		MAIN.send('message-for-Spotify', `:eval('app.openLink(\`${$(this).attr('href')}\`)')`);
 		return false;
 	}
 	for (var library in libraries){

@@ -260,17 +260,17 @@
 						</label>
 					</td>
 				</tr>
-<!-- 				<tr class='indent'>
+				<tr class='indent'>
 					<td>
 						<h2>Show Radio Icon</h2>
-						<span>Never use it, get rid of it..eh?</span>
+						<span>Toggles the visibility of the Radio icon on the sidebar</span>
 					</td>
 					<td>
 						<label class='toggle'>
 							<input type='checkbox' name='NavBar.Radio'>
 						</label>
 					</td>
-				</tr> -->
+				</tr>
 				<tr class='indent'>
 					<td>
 						<h2>Show Follow Icon</h2>
@@ -328,7 +328,19 @@
 				</tr>
 				<tr>
 					<td>
-						<h2>Clean AlbumCache</h2>
+						<h2>Album Art Cache Size</h2>
+						<span>Choose the size of the Album Art that will be cached<br/><i>Note: Larger images will take up more disk space over time</i></span>
+					</td>
+					<td>
+						<select name='AlbumArtSize'>
+							<option value='large'>Large</option>
+							<option value='medium'>Medium</option>
+							<option value='small'>Small</option>
+						</select>
+					</td>
+				<tr>
+					<td>
+						<h2>Clean Album Cache</h2>
 						<span>This will remove all album art covers</span>
 					</td>
 					<td>
@@ -337,7 +349,7 @@
 				</tr>
 				<tr>
 					<td>
-						<h2>Clean LyricCache</h2>
+						<h2>Clean Lyric Cache</h2>
 						<span>This will remove all the lyrics you have saved</span>
 					</td>
 					<td>

@@ -2,107 +2,70 @@
  * @author Matthew James <Quacky2200@hotmail.com>
  * Preload script for preferences screen
  */
-global.remote = require('electron').remote;
-let fs = require('fs');
-let props = remote.getGlobal('props');
-var AutoLaunch = require('auto-launch');
-let autolaunch = new AutoLaunch({
-	name: props.names.project,
-	//A 10 second sleep allows the desktop to load, otherwise no dice... :(
-	path: '/bin/bash -c "sleep 10 && . ' + props.process.cwd() + '/spotifywebplayer"'
-});
-global.props = props;
+global.MAIN = require('electron').ipcRenderer;
 
-var deleteFolderRecursive = function(path) {
-	if( fs.existsSync(path) ) {
-		fs.readdirSync(path).forEach(function(file,index){
-			var curPath = path + "/" + file;
-			if(fs.lstatSync(curPath).isDirectory()) { // recurse
-				deleteFolderRecursive(curPath);
-			} else { // delete file
-				fs.unlinkSync(curPath);
-			}
-		});
-		fs.rmdirSync(path);
-	}
-};
 document.onreadystatechange = function(){
 	if (document.readyState !== 'complete') return;
 	window.$ = window.jQuery = require('../spotify/jquery');
-	interface = require('../spotify/interface');
-	function recursivelySetupSettings(settings, skip, prefix){
-		for(var setting in settings){
-			if(skip.indexOf(setting) != -1) continue;
-			if(typeof(settings[setting]) == 'object'){
-				recursivelySetupSettings(settings[setting], skip, (prefix ? prefix + '.' : '') + setting + '.');
-			} else {
-				var selector = 'input[name=\'' + (prefix ? prefix : '') + setting + '\']';
-				$(selector).prop('checked', settings[setting]);
-				$(selector).attr('onchange', 
-					'props.settings.' + (prefix ? prefix : '') + setting + ' = $(this).prop(\'checked\');props.settings.save();');
-			}
-		}
-	}
-	recursivelySetupSettings(props.settings, ['Theme', 'AlbumCacheDisabled']);
-
+	MAIN.send('message-for-Preferences', `:eval('require(\'./behaviour\')()')`);
 	$('input[name=\'StartOnLogin\']').change(function(){
-		if (props.process.platform == 'linux'){
-			if($(this).prop('checked')){
-				autolaunch.enable();
+		MAIN.send('message-for-Preferences', `:eval('
+			if (process.platform == 'linux'){
+				if(${$(this).prop('checked')}) {
+					autolaunch.enable();
+				} else {
+					autolaunch.disable();
+				}
 			} else {
-				autolaunch.disable();
+				app.setLoginItemSettings({openAtLogin: ${$(this).prop('checked')}})
 			}
-		} else {
-			app.setLoginItemSettings({openAtLogin: $(this).prop('checked')});
-		}
+		')`);
 	});
 
-	$('input[name*="ShowTray"]').change(function(){
-		props.settings.ShowTray = $(this).prop('checked');
-		props.settings.save();
-		props.spotify.webContents.executeJavaScript('tray.toggleTray(' + props.settings.ShowTray + ')');
+	$('input[name*="ShowTray"]').change(function() {
+		MAIN.send('message-for-Spotify', `:eval('
+			app.settings.ShowTray = ${$(this).prop('checked')};
+			app.settings.save();
+			tray.toggle(app.settings.ShowTray);
+		')`)
 	});
-	$('input[name*="ShowApplicationMenu"]').change(function(){
-		props.settings.ShowApplicationMenu = $(this).prop('checked');
-		props.settings.save();
-		props.spotify.webContents.executeJavaScript('appMenu.toggleMenu(' + props.settings.ShowApplicationMenu + ')');
+	$('input[name*="ShowApplicationMenu"]').change(function() {
+		MAIN.send('message-for-Spotify', `:eval('
+			app.settings.ShowApplicationMenu = ${$(this).prop('checked')};
+			app.settings.save();
+			appMenu.toggle(app.settings.ShowApplicationMenu);
+		')`)
 	});
-	$('input[name*="AlbumCacheDisabled"]').change(function(){
-		props.settings.AlbumCacheDisabled = !$(this).prop('checked');
-		props.settings.save();
-		props.spotify.webContents.executeJavaScript('controller.albumCacheDisabled = ' + props.settings.AlbumCacheDisabled + ';');
+	$('input[name*="AlbumCacheDisabled"]').change(function() {
+		MAIN.send('message-for-Spotify', `:eval('
+			app.settings.AlbumCacheDisabled = ${!$(this).prop('checked')};
+			app.settings.save();
+			controller.albumCacheDisabled = app.settings.AlbumCacheDisabled;
+		')`)
 	});
 
-	$('input[name*=\'NavBar\'], select').change(() => {
-		interface.refresh();
-		props.spotify.webContents.executeJavaScript('interface.refresh()');
-	});
-	interface.allThemeNames.forEach((theme) => {
-		$('select[name*=\'Theme\']').append(`<option value='${theme}'>${theme.charAt(0).toUpperCase() + theme.slice(1)}</option>`);
-	});
 	$('select[name=\'Theme\']').change(function(){
-		interface.themeName = $(this).val();
-		props.spotify.webContents.executeJavaScript('interface.refresh()');
-		setTimeout(() => {
-			console.log(props.spotify.AboutInstance)
-			if(props.spotify.AboutInstance) props.spotify.AboutInstance.webContents.executeJavaScript('interface.refresh()');
-		}, 50)
+		MAIN.send('message', `:eval('
+			theme.name = '${$(this).val()}';
+			theme.refresh();
+		')`);
 	});
+
 	$('select[name=\'TrayIcon\']').change(function(){
-		props.settings.TrayIcon = $(this).val();
-		props.spotify.webContents.executeJavaScript('tray.toggleTray(false);tray.toggleTray(true);');
-		props.settings.save();
-	});
-	if(!props.settings.AlbumCacheDisabled) $('input[name*="AlbumCacheDisabled"]').attr('checked', 'true');
-	$('select[name=\'Theme\']').val(props.settings.Theme);
-	$('select[name=\'TrayIcon\']').val(props.settings.TrayIcon);
-
-	$('a.clean-album-cache').click(() => {
-		deleteFolderRecursive(props.albumCache);
+		console.log($(this).val());
+		MAIN.send('message-for-Spotify', `:eval('
+			app.settings.TrayIcon = '${$(this).val()}';
+			app.settings.save();
+			tray.toggle(false);
+			tray.toggle(true);
+		')`);
 	});
 
-	$('a.clean-lyric-cache').click(() => {
-		deleteFolderRecursive(props.lyricCache);
-	});
-	interface.refresh();
+	$('a.clean-album-cache').click(() => MAIN.send('message-for-Preferences', `:eval('
+		deleteFolderRecursive(app.paths.caches.albums);
+	')`));
+
+	$('a.clean-lyric-cache').click(() => MAIN.send('message-for-Preferences', `:eval('
+		deleteFolderRecursive(app.paths.caches.lyrics);
+	')`));
 };

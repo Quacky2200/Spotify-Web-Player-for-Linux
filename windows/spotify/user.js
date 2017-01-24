@@ -1,45 +1,41 @@
 /*
  * @author Matthew James <Quacky2200@hotmail.com>
- * User information/controller
+ * User controller
  */
-//Grab a hook of the window to prevent it going anywhere
-global.windowHook = false;
-/**
- * When the user clicks on the logout button in the Web Player
- */
-$(document).on('click', 'a#logout-settings[href="/logout"]', function(e){
-	logoutUser();
-	//e.preventDefault();
-});
-// var config = JSON.parse(
-// 	$('script').filter(
-// 		function(){
-// 			return $(this).text().indexOf('var login = new Spotify.Web.Login') > -1
-// 		}
-// 	)
-// 	.text()
-// 	.match(/(\{.*\})/)[0] //Get the JSON out of the script text
-// );
-module.exports = {
-	/*
-	 * Returns if a user is logged into Spotify
-	 * @returns {Boolean}
-	 */
-	isLoggedIn: function(){
-		return !$('#login').is(":visible");
-	},
-	/**
-	 * Logout the Spotify user by removing all cache
-	 */
-	logout: function(){
+const {ipcMain} = require('electron');
+function User(){
+	this.loggedIn = false;
+	//Simple functionality
+	this.login = () => {
+		this.loggedIn = true;
+		this.username = null;
+		//Hook onto logout and get user info
+		ipcMain.once('getUsername', (e, a) => this.username = a);
+		ipcMain.once('userLogout', () => this.logout());
+		app.spotify.do(`
+			$(document).on('click', 'a#logout-settings[href="/logout"]', () => {
+				MAIN.send('userLogout', '')
+			});
+
+			var {username} = JSON.parse(
+				$('script')
+					.filter((i,e) => !!~$(e).text().indexOf('var login'))
+					.text()
+					.match(/({.*})/)[0]
+			);
+			MAIN.send('getUsername', username);
+		`);
+	}
+	this.logout = () => {
 		tray.toggleMediaButtons(false);
-		tray.toggleTray(false);
-		appMenu.toggleMenu(false);
+		tray.toggle(false);
+		appMenu.toggle(false);
 		controller.dispose();
-		props.settings.lastURL = null;
-		props.settings.save();
-			windowHook = false;
-		if (!props.spotify.isVisible()) props.spotify.show();
-		props.clearCache();
+		app.settings.lastURL = null;
+		app.settings.save();
+		this.loggedIn = false;
+		if (!app.spotify.isVisible()) app.spotify.show();
+		app.spotify.clearCache();
 	}
 };
+module.exports = new User();

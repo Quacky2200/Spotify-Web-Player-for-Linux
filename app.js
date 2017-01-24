@@ -2,14 +2,10 @@
  * @author Matthew James <Quacky2200@hotmail.com>
  * App behaviour class
  */
-const OS = require('os');
 const FS = require('fs');
-const request = require('request');
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 const app = electron.app;
-const sanitize = require('sanitize-filename')
-const MXM = require('node-unofficialmxm');
 //Let's load up our application
 if(typeof(electron) != 'object' && !electron.app){
 	console.log('The Electron installation cannot be found. Aborting...');
@@ -21,43 +17,8 @@ App = (function(){
 		constructor(){
 			this.settings = require('./app-settings')(
 				`${App.paths.home}/preferences.json`,
-				{
-					CloseToTray: true,
-					CloseToController: false,
-					ShowApplicationMenu: true,
-					ShowTray: true,
-					TrayIcon: 'lime',
-					Notifications: {
-						ShowTrackChange: true,
-						ShowPlaybackPlaying: true,
-						ShowPlaybackPaused: true,
-						ShowPlaybackStopped: true,
-						OnlyWhenFocused: true
-					},
-					NavBar: {
-						Follow: true,
-						User: true,
-						Radio: true,
-						YourMusic: true,
-						Browse: true,
-						Settings: true,
-						Search: true,
-						Sing: true
-					},
-					AlbumCacheDisabled: false,
-					Theme: 'dark',
-					StartOnLogin: false,
-					StartHidden: false,
-					lastURL: null
-				}
+				require('./defaults.json')
 			);
-			this.settings.open((err, data) => {
-				if(err){
-					console.log("The settings are corrupt, cannot continue.");
-					process.exit(-1);
-				}
-			});
-			this.dbus = require('./dbus')(App.names.process);
 			require('./plugins')(app);
 			//Set Cache
 			app.setPath('userData', App.paths.home);
@@ -71,9 +32,19 @@ App = (function(){
 			process.title = App.names.process;
 			//When Electron has loaded, start opening the window.
 			app.on('ready', () => {
-				var Spotify = require('./windows/windows')(this, electron, BrowserWindow);
-				_spotify = new Spotify();
+				this.settings.open((err, data) => {
+					if(err){
+						console.log("The settings are corrupt, cannot continue.");
+						process.exit(-1);
+					}
+					var Spotify = require('./windows/spotify/window');
+					_spotify = new Spotify();
+				});
 			});
+			this.setApplicationMenu = app.setApplicationMenu;
+			this.quit = app.quit;
+			this.openLink = electron.shell.openExternal;
+			this.setLoginItemSettings = app.setLoginItemSettings;
 			app.on('quit', () => {
 				console.log('Exiting...');
 			});
@@ -98,7 +69,7 @@ App = (function(){
 				_spotify.unmaximize();
 			});
 		}
-		get VERSION(){
+		get version(){
 			return electron.app.getVersion();
 		}
 		static get names(){
@@ -108,32 +79,14 @@ App = (function(){
 				project: 'Spotify Web Player for Linux'
 			}
 		}
-		get request(){
-			return request;
-		}
 		get names(){
 			return App.names;
 		}
-		static get HOST(){
+		static get host(){
 			return 'https://play.spotify.com';
 		}
-		get HOST(){
-			return App.HOST;
-		}
-		get electron(){
-			return electron;
-		}
-		get globalShortcut(){
-			return electron.globalShortcut;
-		}
-		get mxm(){
-			return MXM;
-		}
-		get process(){
-			return process;
-		}
-		get console(){
-			return console;
+		get host(){
+			return App.host;
 		}
 		static get paths(){
 			var USER_PATH = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
@@ -185,35 +138,16 @@ App = (function(){
 		get icon(){
 			return App.icon;
 		}
-		get os(){
-			return OS;
-		}
-		static get HOSTNAME(){
-			return os.hostname();
-		}
-		get HOSTNAME(){
-			return App.HOSTNAME;
-		}
-		static get FILEPATH(){
-			process.cwd();
-		}
-		get FILEPATH(){
-			App.FILEPATH;
-		}
 		get spotify(){
 			return _spotify;
-		}
-		clearCache(){
-			_spotify.loadURL("about:blank");
-			_spotify.webContents.session.clearCache(() => {
-				_spotify.webContents.session.clearStorageData(() => {
-					console.log("Cleared session and cache.");
-					_spotify.loadURL(this.HOST);
-				});
-			});
 		}
 	}
 	return App;
 })();
 const APP = new App();
-global.props = APP;
+global.app = APP;
+process.on('SIGINT', () => {
+  console.log('Received SIGINT (Ctrl-C). Exiting...');
+  app.quit();
+  process.exit(0);
+});

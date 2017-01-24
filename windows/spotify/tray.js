@@ -2,78 +2,65 @@
  * @author Matthew James <Quacky2200@hotmail.com>
  * System Tray
  */
-const {Menu,Tray} = require('electron').remote;
-const tray = {
-	appIcon: null,
-	contextMenu: {
-		togglePlayback: {label: "Play/Pause", enabled: false, click: () => {
-			controller.playPause()
-		}},
-		previous: {label: "Previous", enabled: false, click: () => {
-			controller.previous()
-		}},
-		next: {label: "Next", enabled: false, click: () => {
-			controller.next()
-		}},
-		toggleSpotifyAppearance: {label: "Hide Spotify", click: function(){
+const {Menu,Tray} = require('electron');
+const TrayMenu = function() {
+	this.appIcon = null;
+	this.items = {
+		togglePlayback: {label: "Play/Pause", enabled: false, click: () => controller.playPause()},
+		previous: {label: "Previous", enabled: false, click: () => controller.previous()},
+		next: {label: "Next", enabled: false, click: () => controller.next()},
+		toggleVisibility: {label: "Hide Spotify", click: () => {
 			var prefix;
-			if (props.spotify.isVisible() && !props.spotify.isMinimized()){
+			if (app.spotify.isVisible() && !app.spotify.isMinimized()){
 				prefix = 'Show';
-				props.spotify.hide();
+				app.spotify.hide();
 			} else {
 				prefix = 'Hide';
-				props.spotify.show();
-				props.spotify.focus();
+				app.spotify.show();
+				app.spotify.focus();
 			}
-			tray.contextMenu.toggleSpotifyAppearance.label = prefix + ' Spotify';
-			tray.toggleTray(props.settings.ShowTray);
+			this.items.toggleVisibility.label = prefix + ' Spotify';
+			this.toggle(app.settings.ShowTray);
 		}},
-		appPreferences: {label: "App Preferences", click: function(){
-			props.spotify.showPreferences();
-		}},
-		logout: {label: "Logout", click: function(){
-			user.logout();
-		}},
-		quit: {label: "Quit", click:function(){
-			tray.toggleTray(false);
-			appMenu.toggleMenu(false);
-				windowHook = false;
-				props.electron.app.quit();
+		appPreferences: {label: "App Preferences", click: () => app.spotify.showPreferences()},
+		logout: {label: "Logout", click: () => user.logout()},
+		quit: {label: "Quit", click: () => {
+			this.toggle(false);
+			appMenu.toggle(false);
+			user.loggedIn = false;
+			app.quit();
 		}}
-	},
-	toggleTray: function(toggle){
-		if (toggle && props.settings.ShowTray){
-			if (!tray.appIcon) tray.appIcon = new Tray(`${props.paths.icons}/spotify-ico-small-${props.settings.TrayIcon}.png`);
-			tray.appIcon.setContextMenu(Menu.buildFromTemplate([
-				tray.contextMenu.togglePlayback,
-				tray.contextMenu.previous,
-				tray.contextMenu.next,
+	};
+	this.toggle = (toggle) => {
+		if (toggle && app.settings.ShowTray){
+			this.items.toggleVisibility.label = (app.spotify.isMinimized() || !app.spotify.isVisible() ? 'Show' : 'Hide') + ' Spotify';
+			if (!this.appIcon) this.appIcon = new Tray(`${app.paths.icons}/spotify-ico-small-${app.settings.TrayIcon}.png`);
+			this.appIcon.setContextMenu(Menu.buildFromTemplate([
+				this.items.togglePlayback,
+				this.items.previous,
+				this.items.next,
 				{type:'separator'},
-				tray.contextMenu.toggleSpotifyAppearance,
-				tray.contextMenu.appPreferences,
-				tray.contextMenu.logout,
-				tray.contextMenu.quit
+				this.items.toggleVisibility,
+				this.items.appPreferences,
+				this.items.logout,
+				this.items.quit
 			]));
-			tray.appIcon.on('click', () => {
-				props.spotify.show();
-				props.spotify.focus();
+			this.appIcon.on('click', () => {
+				app.spotify.show();
+				app.spotify.focus();
 			});
-		} else if (!toggle && tray.appIcon != null){
-			tray.appIcon.destroy();
-			tray.appIcon = null;
+		} else if (!toggle && this.appIcon != null){
+			this.appIcon.destroy();
+			this.appIcon = null;
 		}
-	},
-	toggleMediaButtons: function(toggle){
+	};
+	this.toggleMediaButtons = function(toggle){
 		//Show the media buttons on show value
-		tray.contextMenu.togglePlayback.enabled = toggle;
-		tray.contextMenu.previous.enabled = toggle;
-		tray.contextMenu.next.enabled = toggle;
+		this.items.togglePlayback.enabled = toggle;
+		this.items.previous.enabled = toggle;
+		this.items.next.enabled = toggle;
 		//Make the changes apparent by reloading the menu
-		tray.toggleTray(true);
-	}
+		this.toggle(true);
+	};
 };
-document.addEventListener("visibilitychange", function(){
-	tray.contextMenu.toggleSpotifyAppearance.label = (props.spotify.isMinimized() || !props.spotify.isVisible() ? 'Show' : 'Hide') + ' Spotify';
-	tray.toggleTray(props.settings.ShowTray);
-});
-module.exports = tray;
+module.exports = new TrayMenu();
