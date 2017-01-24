@@ -64,11 +64,9 @@ const Sing = function(){
 							$('#sing-sync').click();
 						});
 						$('a[id*=\'nav-\']').not('#nav-sing').click(function(){
-							$('#sing-ui').fadeOut(function() {
-								var v = $(this).is(':visible');
-								$('#nav-sing').toggleClass('active', v);
-								MAIN.sendFunc({v:v}, () => sing._isUIShowing = v);
-							});
+							$('#sing-ui').toggleClass('active', false);
+							$('#nav-sing').toggleClass('active', false);
+							MAIN.sendFunc({v: false}, () => sing._isUIShowing = v);
 						});
 					}
 				});

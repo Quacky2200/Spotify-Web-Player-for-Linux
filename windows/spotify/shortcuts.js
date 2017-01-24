@@ -23,7 +23,7 @@ module.exports = {
 				if (app.spotify.isDevToolsOpened()){
 					app.spotify.closeDevTools();
 				} else {
-					app.spotify.closeDevTools()
+					app.spotify.openDevTools()
 				}
 			}
 			bind('CommandOrControl+Shift+I', showdevtools);

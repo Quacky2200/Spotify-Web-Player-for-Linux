@@ -30,7 +30,6 @@ class Spotify extends BrowserWindow{
 			}
 		});
 		this.hasRadio = true;
-		this.openDevTools();
 		this.on('page-title-updated', (event) => event.preventDefault());
 		this.on('closed', () => { app.quit(); process.exit(0) });
 		this.setMenu(null);
