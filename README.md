@@ -1,3 +1,14 @@
+**Please Note:** This project has been discontinued.
+
+If you'd like to read more, please refer to my [discontinuation of Spotify Web Player for Linux](http://mattjames.co.nf/journal/spotify-web-player-discontinued).
+
+I apologise to anyone who feels disappointed about this decision, it was one that took a lot to think about. It's sadly what happens when you rely on a third-party in all honesty.
+
+If you'd like to continue this project, please either add a pull request or Fork it. 
+
+Kudos
+___
+
 ![Spotify - Logged In](https://cloud.githubusercontent.com/assets/4623599/14404283/bd6f7d9c-fe69-11e5-9588-628248c25dfc.png)
 # Spotify Web Player for Linux
 
