@@ -30,7 +30,7 @@ An Electron wrapper of Spotify Web Player to increase desktop integration for a 
 * Media Keys 
 * Mix-&-Match tray icons to your DE/Icon preferences
 
-##Screenshots
+## Screenshots
 ![Tray Icon](https://cloud.githubusercontent.com/assets/4623599/17799675/63a4c57e-65d4-11e6-8363-30a41ed7f67e.png)
 ![Controls in the Ubuntu Sound Menu](https://cloud.githubusercontent.com/assets/4623599/18899621/44c10b18-8532-11e6-9783-26756b511a6d.png)
 ![Notifications](https://cloud.githubusercontent.com/assets/4623599/18899796/8c8e62d2-8533-11e6-831a-38fae1b627ba.png)

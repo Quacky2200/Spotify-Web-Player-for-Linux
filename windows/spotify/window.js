@@ -44,7 +44,7 @@ class Spotify extends BrowserWindow{
 			if(app.settings.StartHidden) this.minimize();
 		});
 		var url = (app.settings.lastURL && !!~app.settings.lastURL.indexOf('play.spotify.com') ? app.settings.lastURL : app.host);
-		this.loadURL(url);
+		this.loadURL(url, {userAgent: "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"});
 		this.on('focus', () => shortcuts.toggle(true));
 		this.on('blur', () => shortcuts.toggle(false));
 	}
